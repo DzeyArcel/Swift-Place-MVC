@@ -1,0 +1,255 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #221F3B, #050505);
+    color: #EBEBEB;
+    overflow-x: hidden;
+    padding-top: 100px;
+}
+
+.topbar {
+    width: 100%;
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #EBEBEB;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 70px;
+    z-index: 1000;
+    transition: 0.4s ease-in-out;
+}
+
+/* Logo Styling */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    width: 180px;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.logo-img:hover {
+    transform: scale(1.1);
+}
+
+/* Navigation Links */
+.nav-links {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav-links ul li {
+    margin: 0 10px;
+}
+
+/* Navigation Buttons - Sleek Look */
+.nav-links ul li a {
+    text-decoration: none;
+    color: #EBEBEB;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.nav-links ul li a:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Logout Button */
+.logout-btn {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-right: 20px;
+    transition: all 0.3s ease-in-out;
+    color: #EBEBEB;
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    transform: scale(1.1);
+}
+
+/* Profile Content */
+.profile-content {
+  
+    max-width: 600px;
+    margin: 80px auto;
+    background: #221F3B;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-content:hover {
+    transform: translateY(-5px);
+}
+
+.profile-content h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #EBEBEB;
+}
+
+/* Profile Form */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #EBEBEB;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #6F4A8E;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #050505;
+    color: #EBEBEB;
+    transition: 0.3s;
+}
+
+input:focus, textarea:focus {
+    border-color: #6F4A8E;
+    outline: none;
+}
+
+/* Buttons */
+button {
+    padding: 12px;
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #EBEBEB;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    transform: scale(1.05);
+}
+
+/* Delete Button */
+.delete-btn {
+    background: #dc3545;
+    margin-top: 10px;
+}
+
+.delete-btn:hover {
+    background: #b52b37;
+}
+
+/* Responsive Navigation */
+@media (max-width: 768px) {
+    .topbar {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .nav-links ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nav-links ul li a {
+        padding: 8px 15px;
+    }
+}
+
+
+/* Footer */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+footer {
+    background: #111;
+    color: white;
+    padding: 30px 20px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.footer-container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* Footer Links */
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s ease-in-out;
+}
+
+.footer-links a:hover {
+    color: #1DBF73; /* Fiverr Green */
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.social-icons a {
+    font-size: 1.5em;
+    color: white;
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2);
+    color: #1DBF73;
+}
+
+/* Copyright */
+footer p {
+    font-size: 0.9em;
+    color: #aaa;
+}
+

@@ -1,0 +1,261 @@
+/* Import Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #221F3B, #050505);
+    color: #EBEBEB;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Main Container */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Top Bar - Premium Gradient */
+.topbar {
+    width: 100%;
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #EBEBEB;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 70px;
+    z-index: 1000;
+    transition: 0.4s ease-in-out;
+}
+
+/* Logo Styling */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    width: 180px;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.logo-img:hover {
+    transform: scale(1.1);
+}
+
+/* Navigation Links */
+.nav-links {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav-links ul li {
+    margin: 0 15px;
+}
+
+/* Navigation Buttons - Sleek Look */
+.nav-links ul li a {
+    text-decoration: none;
+    color: #EBEBEB;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.nav-links ul li a:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Logout Button */
+.logout-btn {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-right: 20px;
+    transition: all 0.3s ease-in-out;
+    color: #EBEBEB;
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    transform: scale(1.1);
+}
+
+/* Profile Content */
+.profile-content {
+    margin-left: 280px;
+    padding: 50px;
+    width: calc(100% - 280px);
+    margin-top: 80px;
+}
+
+/* Profile Header - Glassmorphism */
+.profile-header {
+    background: rgba(111, 74, 142, 0.15);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(10px);
+    transition: 0.3s ease-in-out;
+}
+
+.profile-header:hover {
+    transform: translateY(-5px);
+}
+
+.profile-header h1 {
+    font-size: 26px;
+    color: #EBEBEB;
+}
+
+/* Edit Button */
+.profile-header .edit-btn {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #EBEBEB;
+    padding: 12px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+}
+
+.profile-header .edit-btn:hover {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    transform: scale(1.1);
+}
+
+/* Info Section */
+.profile-info {
+    background: rgba(255, 255, 255, 0.1);
+    margin-top: 20px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.profile-info h2 {
+    font-size: 22px;
+    color: #EBEBEB;
+    margin-bottom: 12px;
+}
+
+.profile-info p {
+    font-size: 18px;
+    color: #ddd;
+    margin-bottom: 10px;
+}
+
+/* Buttons */
+button {
+    padding: 14px 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: 0.3s ease-in-out;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #EBEBEB;
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #EBEBEB;
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+}
+
+/* Footer */
+footer {
+    margin-top: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 30px 20px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.footer-container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* Footer Links */
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s ease-in-out;
+}
+
+.footer-links a:hover {
+    color: #17ead9;
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.social-icons a {
+    font-size: 1.5em;
+    color: white;
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2);
+    color: #17ead9;
+}
+
+/* Copyright */
+footer p {
+    font-size: 0.9em;
+    color: #aaa;
+}

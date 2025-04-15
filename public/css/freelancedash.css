@@ -1,0 +1,603 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    width: 100%;
+}
+
+/* Navbar */
+.logo-img {
+    width: 200px; /* Increased size */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 65px; /* Prevents overflow */
+}
+
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #fff;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.navbar input {
+    width: 40%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.navbar nav a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.navbar nav a:hover {
+    color: #1dbf73;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
+    color: white;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.hero h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 18px;
+}
+
+.hero button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: white;
+    color: #333;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.hero button:hover {
+    background: #1dbf73;
+    color: white;
+}
+
+/* Earnings Section */
+.earnings {
+    background: white;
+    text-align: center;
+    padding: 30px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.earnings h2 {
+    font-size: 24px;
+}
+
+.earnings p {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.earnings button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #1dbf73;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.earnings button:hover {
+    background: #17a35e;
+}
+
+/* Footer */
+footer {
+    background: #111;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+
+.job-listings {
+    background: white;
+    padding: 30px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.job-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    width: calc(33.33% - 20px);
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #555;
+}
+
+.budget {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #1dbf73;
+}
+
+
+
+/* Footer */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+footer {
+    background: #111;
+    color: white;
+    padding: 30px 20px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.footer-container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* Footer Links */
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s ease-in-out;
+}
+
+.footer-links a:hover {
+    color: #1DBF73; /* Fiverr Green */
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.social-icons a {
+    font-size: 1.5em;
+    color: white;
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2);
+    color: #1DBF73;
+}
+
+/* Copyright */
+footer p {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.job-listings {
+    width: 100%;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+/* Title of the section */
+.job-listings h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;  /* Decreased size of the title */
+    color: #333;
+}
+
+/* Wrapper for the job cards with horizontal scrolling */
+.job-cards {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 15px;  /* Reduced gap between cards */
+    padding: 10px 0;
+    max-width: 100%; /* Ensure the job cards container doesn't overflow */
+    box-sizing: border-box; /* Make sure padding doesn't cause overflow */
+}
+
+/* Individual job post card styling */
+.job-post {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 250px;  /* Reduced width of the job card */
+    padding: 15px;  /* Reduced padding */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;  /* Reduced gap between elements */
+}
+
+/* Hover effect on the job card */
+.job-post:hover {
+    transform: translateY(-10px);
+}
+
+/* Title styling */
+.job-post h3 {
+    font-size: 1.4em;  /* Decreased font size */
+    color: #333;
+    margin-bottom: 8px;
+}
+
+/* Description of the job */
+.job-post .desc {
+    font-size: 0.9em;  /* Decreased font size */
+    color: #666;
+    margin-bottom: 8px;
+}
+
+/* Styling for the job details (skills, budget, etc.) */
+.job-post p {
+    font-size: 0.9em;  /* Decreased font size */
+    color: #555;
+    margin: 4px 0;  /* Reduced margin between lines */
+}
+
+/* Button styling */
+.apply-btn {
+    background-color: #5a0551;
+    color: white;
+    padding: 8px 12px;  /* Reduced button size */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.apply-btn:hover {
+    background-color: #3f0637;
+}
+
+/* service  ni siya*/
+
+.service-listings {
+    padding: 30px;
+    background: #fff;
+}
+
+.service-listings h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.service-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.service-card {
+    background: #f9f9f9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.placeholder-img {
+    width: 100%;
+    height: 180px;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 16px;
+}
+
+.service-info {
+    padding: 15px;
+}
+
+.service-info h4 {
+    margin: 0;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.service-info .title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+    color: #333;
+}
+
+.service-info .desc {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.service-info .rating {
+    margin-top: 8px;
+    color: #f59e0b;
+    font-size: 13px;
+}
+
+.service-info .price {
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.service-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.service-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.service-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.placeholder-img {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4;
+    color: #888;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+.service-info {
+    padding-top: 10px;
+}
+
+.service-info h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.service-info p {
+    margin: 8px 0;
+}
+
+.price {
+    font-weight: 500;
+}
+
+.rating {
+    color: #f39c12;
+}
+
+.expertise, .delivery-time, .tags {
+    font-style: italic;
+    color: #555;
+    margin-top: 5px;
+}
+
+.tags {
+    color: #007BFF; /* Blue color for tags */
+    font-size: 0.9rem;
+}
+
+.tags:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Styling for the navbar links */
+.navbar nav {
+    display: flex;
+    align-items: center; /* Align all nav items vertically */
+}
+
+.navbar nav a {
+    margin: 0 15px; /* Adds space between each nav item */
+    text-decoration: none; /* Removes the underline */
+    color: #333; /* Change to your preferred color */
+    font-size: 16px;
+}
+
+
+/* Styles for the notification icon and modal */
+.notification-icon {
+    position: relative;
+    display: inline-block;
+}
+
+.notification-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border-radius: 100%;
+    padding: 5px 5px;
+    font-size: 8px;
+}
+
+/* The Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 5px;
+    width: 40%;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+/* Close Button */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Notification Item Styles */
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.notification-item.unread {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+.notification-item a {
+    text-decoration: none;
+    color: #000;
+}
+
+.timestamp {
+    color: #888;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+
+.post-service-link {
+    display: inline-block; /* Make it behave like a button */
+    padding: 10px 20px;  /* Button-like padding */
+    background-color: #950693;  /* Green background */
+    color: white;  /* White text */
+    text-decoration: none;  /* Remove underline */
+    border-radius: 5px;  /* Rounded corners */
+    font-size: 1em;  /* Font size */
+    font-weight: bold;  /* Bold text */
+    text-align: center;  /* Center the text */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect for the link */
+.post-service-link:hover {
+    background-color: #730867;  /* Darker green on hover */
+    transform: translateY(-3px);  /* Lift the link when hovered */
+}
+
+/* Active effect for the link (when clicked) */
+.post-service-link:active {
+    transform: translateY(1px);  /* Button appears to be pressed */
+}

@@ -1,0 +1,530 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+}
+
+.logo-img {
+    width: 200px; /* Increased size */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 65px; /* Prevents overflow */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #fff;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.navbar input {
+    width: 40%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.navbar nav a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.navbar nav a:hover {
+    color: #1dbf73;
+}
+
+.hero {
+    background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
+    color: white;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.hero h1 {
+    font-size: 36px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.hero button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: white;
+    color: #333;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.hero button:hover {
+    background: #1dbf73;
+    color: white;
+}
+
+.recommendations, .browsing-history {
+    padding: 30px;
+    background: white;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.service-cards {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.card {
+    min-width: 200px;
+    height: 150px;
+    background: #eee;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    background: #1dbf73;
+    color: white;
+}
+
+
+/* Footer */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+footer {
+    background: #111;
+    color: white;
+    padding: 30px 20px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.footer-container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* Footer Links */
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s ease-in-out;
+}
+
+.footer-links a:hover {
+    color: #1DBF73; /* Fiverr Green */
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.social-icons a {
+    font-size: 1.5em;
+    color: white;
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2);
+    color: #1DBF73;
+}
+
+/* Copyright */
+footer p {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+
+/* mao nig job ha koleray */
+.job-section {
+    padding: 40px;
+    background-color: #f9f9f9;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.job-section h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.job-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.job-card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.job-card:hover {
+    transform: translateY(-5px);
+}
+
+.job-card h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.job-card p {
+    margin: 6px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.job-card .desc {
+    margin-top: 10px;
+    color: #777;
+    font-style: italic;
+}
+
+.recommendations {
+    padding: 60px 20px;
+    background: #f9f9f9;
+    overflow: auto; /* Make the section scrollable if needed */
+}
+
+/* Grid layout for service cards */
+.service-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 30px;
+}
+
+/* Individual service card style */
+.card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%; /* Allow cards to take full height */
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Image styling */
+.service-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+}
+
+/* Card content styling */
+.card-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure content is spaced well */
+    height: 100%;
+}
+
+.card-content h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+}
+
+.card-content p {
+    margin: 6px 0;
+    font-size: 15px;
+    color: #444;
+    line-height: 1.4;
+    flex-grow: 1; /* Ensure description can grow to fit space */
+}
+
+/* Star rating display */
+.stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.stars input[type="radio"] {
+    display: none;
+}
+
+.stars label {
+    font-size: 18px;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.stars input[type="radio"]:checked ~ label,
+.stars label:hover,
+.stars label:hover ~ label {
+    color: gold;
+}
+
+/* Rate button styling */
+.rating-form button {
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.rating-form button:hover {
+    background-color: #333;
+}
+
+
+/* Notification Icon */
+.notif-icon {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.notif-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* General Styles for the Notifications Icon and Dropdown */
+.notifications {
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 50%;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notifications:hover .dropdown {
+    display: block;
+}
+
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.notification-item.unread {
+    background-color: #f9f9f9;
+}
+
+
+
+/* Input Search Box */
+input[type="text"] {
+    padding: 10px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 15px;
+}
+
+/* Notification Bell Styles */
+.notifications a {
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.navbar nav {
+    display: flex;
+    align-items: center; /* Align all nav items vertically */
+}
+
+.navbar nav a {
+    margin: 0 15px; /* Adds space between each nav item */
+    text-decoration: none; /* Removes the underline */
+    color: #333; /* Change to your preferred color */
+    font-size: 16px;
+}
+
+
+/* Styles for the notification icon and modal */
+.notification-icon {
+    position: relative;
+    display: inline-block;
+}
+
+.notification-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border-radius: 100%;
+    padding: 5px 5px;
+    font-size: 8px;
+}
+
+/* The Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 5px;
+    width: 40%;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+/* Close Button */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Notification Item Styles */
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.notification-item.unread {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+.notification-item a {
+    text-decoration: none;
+    color: #000;
+}
+
+.timestamp {
+    color: #888;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+
+.post-job-link {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #981ebd; /* Green background */
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.post-job-link:hover {
+    background-color: #940c7f; /* Darker green when hovering */
+    transform: scale(1.05); /* Slightly enlarge the link on hover */
+}
+
+.post-job-link:active {
+    background-color: #660947; /* Even darker green when clicked */
+    transform: scale(1); /* Return to normal size */
+}
