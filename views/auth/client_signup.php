@@ -16,7 +16,8 @@
 
         <h2>Sign up to hire talent <i class="fa-solid fa-user-tie"></i></h2>
 
-        <form action="/Swift-Place/routes/auth_route.php?action=signupClient" method="POST">
+        <form action="/Swift-Place/index.php?controller=client&action=register" method="POST">
+
 
             <input type="text" name="first_name" placeholder="First Name" required>
             <input type="text" name="last_name" placeholder="Last Name" required>

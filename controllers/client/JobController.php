@@ -129,7 +129,7 @@ class JobController {
             $experience = $_POST['experience_level'];
     
             require_once 'models/Job.php';
-            $success = Job::update($job_id, $client_id, $title, $description, $category, $budget, $deadline, '', $type, $experience);
+            $success = Job::update($job_id, $client_id, $title, $description, $category, $budget, $deadline, '', $type);
     
             if ($success) {
                 echo "<script>alert('Job updated successfully!'); window.location.href='index.php?controller=job&action=myPostedJobs';</script>";

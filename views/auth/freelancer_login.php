@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,8 @@
         </div>
         <p class="message">Enter your email and password to access your freelancer account.</p>
 
-        <form action="/Swift-Place/index.php?controller=freelancer&action=login" method="POST">
+        <form method="POST" action="/Swift-Place/index.php?controller=freelancer&action=login">
+
 
 
             <input type="email" name="email" placeholder="Email" required>

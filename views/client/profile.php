@@ -14,10 +14,11 @@
     </div>
     <nav class="nav-links">
         <ul>
-        <li><a href="index.php?controller=client&action=dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="index.php?controller=client&action=Clientdashboard"><i class="fas fa-home"></i> Dashboard</a></li>
             <li><a href="index.php?controller=client&action=profile"></i> Profile</a></li>
             <li><a href="index.php?controller=client&action=edit_profile"><i class="fas fa-edit"></i> Edit Profile</a></li>
-            <li><a href="logout.php" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+
         </ul>
     </nav>
 </header>

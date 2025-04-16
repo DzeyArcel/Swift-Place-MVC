@@ -13,11 +13,13 @@
         </div>
         <input type="text" placeholder="Search for services...">
         <nav>
-        <li><a href="index.php?controller=client&action=dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="index.php?controller=client&action=Clientdashboard"><i class="fas fa-home"></i> Dashboard</a></li>
             <a href="/views/client/client_view_application.php">Application</a>
             <a href="index.php?controller=job&action=myJobs">Your Posted Jobs</a>
             <a href="index.php?controller=client&action=profile">Profile</a>
-            <a href="index.php?controller=auth&action=logout">Logout</a>
+            <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+
+
             <div class="notification-icon" id="notification-icon">
                 <a href="javascript:void(0)" onclick="openNotificationModal()">
                     <i class="fa fa-bell"></i>

@@ -14,8 +14,7 @@
         <p class="message">Enter your email and password to access your client account.</p>
 
         <!-- 🔁 Updated form action to point to client route -->
-        <form method="post" action="/Swift-Place/index.php?controller=client&action=login">
-
+        <form action="/Swift-Place/index.php?controller=client&action=login" method="POST">
 
     <input type="email" name="email" placeholder="Email" required>
     <input type="password" name="password" placeholder="Password" required>

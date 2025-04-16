@@ -15,9 +15,10 @@
             </div>
             <nav>
             <a href="index.php?controller=freelancer&action=dashboard">Dashboard</a>
-                <a href="my_services.php">Your Posted Services</a>
+            <a href="index.php?controller=freelancer&action=myServices">Your Posted Services</a>
                 <a href="../php/freelance_profile.php">Profile</a>
-                <a href="../php/logout.php">Logout</a>
+                <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+
             </nav>
         </div>
     </header>
@@ -44,8 +45,11 @@
                         <p class="expertise"><strong>Expertise:</strong> <?= htmlspecialchars($service['skills']); ?></p>
                         <p class="price"><strong>Price:</strong> $<?= number_format($service['price'], 2); ?></p>
                         <p class="rating"><strong>Rating:</strong> ★ <?= number_format($service['rating'], 1); ?></p>
-                        <a href="index.php?controller=freelancer&action=editService&id=<?= $service['id']; ?>" class="edit-link">Edit</a> |
-                        <a href="index.php?controller=freelancer&action=deleteService&id=<?= $service['id']; ?>" class="delete-link" onclick="return confirm('Are you sure you want to delete this service?')">Delete</a>
+                        <a href="index.php?controller=service&action=editService&id=<?= $service['id']; ?>" class="edit-link">Edit</a>
+
+                        |
+                        <a href="index.php?controller=service&action=deleteService&id=<?= $service['id'] ?>" onclick="return confirm('Are you sure you want to delete this service?')">Delete</a>
+
                     </div>
                 </div>
             <?php endforeach; ?>

@@ -2,6 +2,8 @@
 require_once __DIR__ . '/../config/db.php'; // Adjust path as needed
 
 class Service {
+
+    
     public static function getAllServices() {
         $conn = Database::getConnection();
     
@@ -57,20 +59,34 @@ class Service {
         return $services;
     }
     
-    public static function getServiceById($service_id, $freelancer_id)
+    public static function getServiceById($id, $freelancer_id)
     {
         $conn = Database::getConnection();
+
         $stmt = $conn->prepare("SELECT * FROM services WHERE id = ? AND freelancer_id = ?");
-        $stmt->bind_param("ii", $service_id, $freelancer_id);
+        $stmt->bind_param("ii", $id, $freelancer_id);
         $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        $result = $stmt->get_result();
+        $service = $result->fetch_assoc();
+        $stmt->close();
+        $conn->close();
+        return $service;
     }
+    
 
     public static function updateService($data)
     {
         $conn = Database::getConnection();
+    
         $stmt = $conn->prepare("UPDATE services SET service_title = ?, category = ?, description = ?, skills = ?, price = ?, delivery_time = ?, expertise = ?, tags = ?, media_path = ? WHERE id = ? AND freelancer_id = ?");
-        $stmt->bind_param("ssssdisiisi",
+        
+        if (!$stmt) {
+            echo "Prepare failed: " . $conn->error;
+            return false;
+        }
+    
+        $stmt->bind_param(
+            "sssssssssii",  // adjust if delivery_time is numeric
             $data['service_title'],
             $data['category'],
             $data['description'],
@@ -83,7 +99,61 @@ class Service {
             $data['id'],
             $data['freelancer_id']
         );
-        return $stmt->execute();
+    
+        if (!$stmt->execute()) {
+            echo "Execute failed: " . $stmt->error;
+            return false;
+        }
+    
+        $stmt->close();
+        $conn->close();
+        return true;
     }
     
+
+    public static function postService($data) {
+        $conn = Database::getConnection();
+
+        $stmt = $conn->prepare("INSERT INTO services 
+            (freelancer_id, service_title, category, expertise, description, skills, delivery_time, tags, media_path, price, rating, duration, expires_at, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, NOW())");
+
+        $stmt->bind_param(
+            "issssssssdds",
+            $data['freelancer_id'],
+            $data['title'],
+            $data['category'],
+            $data['expertise'],
+            $data['description'],
+            $data['skills'],
+            $data['delivery_time'],
+            $data['tags'],
+            $data['media_path'],
+            $data['price'],
+            $data['duration'],
+            $data['expires_at']
+        );
+
+        $stmt->execute();
+        $insertedId = $stmt->insert_id;
+        $stmt->close();
+
+        return $insertedId;
+    }
+
+    public static function deleteService($service_id, $freelancer_id)
+{
+    $conn = Database::getConnection();
+
+    $stmt = $conn->prepare("DELETE FROM services WHERE id = ? AND freelancer_id = ?");
+    $stmt->bind_param("ii", $service_id, $freelancer_id);
+
+    $success = $stmt->execute();
+
+    $stmt->close();
+    $conn->close();
+
+    return $success;
+}
+
 }

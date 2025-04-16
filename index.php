@@ -5,12 +5,11 @@ date_default_timezone_set('Asia/Manila');
 $controller = $_GET['controller'] ?? 'home';
 $action = $_GET['action'] ?? 'index';
 
-$controller = strtolower($controller);
 $controllerDir = __DIR__ . '/controllers/';
 $className = '';
 $controllerFile = '';
 
-// Determine controller path and class
+// Routing logic
 switch ($controller) {
     case 'freelancer':
         $controllerFile = $controllerDir . 'freelancer/FreelancerController.php';
@@ -20,16 +19,6 @@ switch ($controller) {
     case 'client':
         $controllerFile = $controllerDir . 'client/ClientController.php';
         $className = 'ClientController';
-
-        // Optional alias for cleaner URL
-        if ($action === 'dashboard') {
-            $action = 'clientDashboard';
-        }
-        break;
-
-    case 'auth':
-        $controllerFile = $controllerDir . 'AuthController.php';
-        $className = 'AuthController';
         break;
 
     case 'job':
@@ -37,21 +26,26 @@ switch ($controller) {
         $className = 'JobController';
         break;
 
-    default:
-        // Fallback for custom or newly added controllers
-        $controllerPath = $controllerDir . $controller . '/' . ucfirst($controller) . 'Controller.php';
-        $className = ucfirst($controller) . 'Controller';
-
-        if (file_exists($controllerPath)) {
-            $controllerFile = $controllerPath;
-        } else {
-            // fallback if controller subfolder does not exist
-            $controllerFile = $controllerDir . ucfirst($controller) . 'Controller.php';
-        }
+    case 'service':
+        $controllerFile = $controllerDir . 'freelancer/ServiceController.php';
+        $className = 'ServiceController';
         break;
+
+    case 'auth':
+        $controllerFile = $controllerDir . 'AuthController.php';
+        $className = 'AuthController';
+        break;
+
+    case 'home':
+        require_once 'views/home/homepage.php';
+        exit();
+
+    default:
+        echo "❌ Unknown controller '$controller'.";
+        exit();
 }
 
-// Execute controller and action
+// Load and run controller
 if (file_exists($controllerFile)) {
     require_once $controllerFile;
 
@@ -62,11 +56,11 @@ if (file_exists($controllerFile)) {
             $controllerInstance->$action();
             exit();
         } else {
-            echo "❌ Method <strong>'$action'</strong> not found in controller <strong>'$className'</strong>.";
+            echo "❌ Method '$action' not found in controller '$className'.";
         }
     } else {
-        echo "❌ Class <strong>'$className'</strong> not found in file: <code>$controllerFile</code>.";
+        echo "❌ Class '$className' not found in $controllerFile.";
     }
 } else {
-    echo "❌ Controller file not found: <code>$controllerFile</code>";
+    echo "❌ Controller file not found: $controllerFile";
 }

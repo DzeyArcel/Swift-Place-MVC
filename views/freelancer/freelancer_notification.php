@@ -62,7 +62,8 @@ $result = $stmt->get_result();
                 <a href="freelancer_dashboard.php">Dashboard</a>
                 <a href="my_services.php">Your Posted Services</a>
                 <a href="../php/freelance_profile.php">Profile</a>
-                <a href="../php/logout.php">Logout</a>
+                <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+
             </nav>
         </div>
     </header>

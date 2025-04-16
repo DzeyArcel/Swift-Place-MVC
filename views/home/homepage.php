@@ -27,9 +27,15 @@
                             Login <i class="fa-solid fa-chevron-down"></i> <!-- Dropdown Icon -->
                         </a>
                         <ul class="dropdown-menu">
-                        <li><a href="/Swift-Place/routes/auth_route.php?action=loginClient"><i class="fa-solid fa-user"></i>Client Login</a></li>
+                        <li><a href="/Swift-Place/index.php?controller=client&action=login"><i class="fa-solid fa-user"></i>Client Login</a></li>
 
-                        <li><a href="/Swift-Place/index.php?controller=freelancer&action=showLogin"><i class="fa-solid fa-briefcase"></i> Freelancer Login</a></li>
+
+                     <!-- Freelancer Login -->
+<li>
+  <a href="/Swift-Place/index.php?controller=freelancer&action=showLogin">
+    <i class="fa-solid fa-briefcase"></i> Freelancer Login
+  </a>
+</li>
 
 
                         </ul>

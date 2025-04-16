@@ -26,16 +26,22 @@ if (!isset($_SESSION['user_id'])) {
         <div class="logo-container">
             <img src="/Swift-Place/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
         </div>
+
         <input type="text" placeholder="Search for services...">
-        <nav>
+
+        <nav class="nav-links">
             <a href="/views/client/client_view_application.php">Application</a>
             <a href="index.php?controller=job&action=myJobs">Your Posted Jobs</a>
             <a href="index.php?controller=client&action=profile">Profile</a>
-            <a href="index.php?controller=auth&action=logout">Logout</a>
+            <a href="index.php?controller=client&action=logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+
+            <!-- Notification Icon -->
             <div class="notification-icon" id="notification-icon">
-                <a href="javascript:void(0)" onclick="openNotificationModal()">
+                <a href="javascript:void(0);" onclick="openNotificationModal()">
                     <i class="fa fa-bell"></i>
-                    <?php if ($unread_notifications > 0): ?>
+                    <?php if (!empty($unread_notifications) && $unread_notifications > 0): ?>
                         <span class="notification-count"><?= $unread_notifications ?></span>
                     <?php endif; ?>
                 </a>
@@ -45,15 +51,16 @@ if (!isset($_SESSION['user_id'])) {
 </header>
 
 <!-- Notification Modal -->
-<div id="notification-modal" class="modal">
+<div id="notification-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close-btn" onclick="closeNotificationModal()">&times;</span>
         <h3>Notifications</h3>
-        <?php if ($notifications->num_rows > 0): ?>
-            <ul>
+
+        <?php if (isset($notifications) && $notifications instanceof mysqli_result && $notifications->num_rows > 0): ?>
+            <ul class="notification-list">
                 <?php while ($notif = $notifications->fetch_assoc()): ?>
                     <li class="notification-item <?= $notif['is_read'] == 0 ? 'unread' : '' ?>">
-                        <a href="?action=dashboardClient&notification_id=<?= $notif['id'] ?>">
+                        <a href="index.php?controller=client&action=notifications&notification_id=<?= htmlspecialchars($notif['id']) ?>">
                             <?= htmlspecialchars($notif['message']) ?>
                         </a>
                         <span class="timestamp"><?= htmlspecialchars($notif['created_at']) ?></span>
@@ -65,6 +72,25 @@ if (!isset($_SESSION['user_id'])) {
         <?php endif; ?>
     </div>
 </div>
+
+<script>
+    function openNotificationModal() {
+        document.getElementById('notification-modal').style.display = 'block';
+    }
+
+    function closeNotificationModal() {
+        document.getElementById('notification-modal').style.display = 'none';
+    }
+
+    // Optional: Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('notification-modal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
 
 <!-- Hero Section -->
 <section class="hero">

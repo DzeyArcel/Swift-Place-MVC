@@ -17,8 +17,10 @@
             <nav>
             <a href="index.php?controller=freelancer&action=myServices">Your Posted Services</a>
 
-                <a href="../php/freelance_profile.php">Profile</a>
-                <a href="../php/logout.php">Logout</a>
+            <li><a href="index.php?controller=freelancer&action=profile"><i class="fas fa-user"></i> Profile</a></li>
+
+
+                <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
 
                 <!-- Notification icon with modal -->
                 <div class="notification-icon" id="notification-icon">
@@ -34,26 +36,28 @@
     </header>
 
     <!-- Notification Modal -->
-    <div id="notification-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeNotificationModal()">&times;</span>
-            <h3>Notifications</h3>
-            <?php if ($result->num_rows > 0) { ?>
-                <ul>
-                    <?php while ($row = $result->fetch_assoc()) { ?>
-                        <li class="notification-item <?php echo $row['is_read'] == 0 ? 'unread' : ''; ?>">
-                            <a href="freelancer_notification.php?notification_id=<?php echo $row['id']; ?>">
-                                <?php echo htmlspecialchars($row['message']); ?>
-                            </a>
-                            <span class="timestamp"><?php echo htmlspecialchars($row['created_at']); ?></span>
-                        </li>
-                    <?php } ?>
-                </ul>
-            <?php } else { ?>
-                <p>No notifications yet.</p>
-            <?php } ?>
-        </div>
+    <!-- Notification Modal -->
+<div id="notification-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeNotificationModal()">&times;</span>
+        <h3>Notifications</h3>
+        <?php if (!empty($notifications)) { ?>
+            <ul>
+                <?php foreach ($notifications as $row) { ?>
+                    <li class="notification-item <?php echo $row['is_read'] == 0 ? 'unread' : ''; ?>">
+                        <a href="index.php?controller=freelancer&action=notifications&notification_id=<?= $row['id'] ?>">
+                            <?php echo htmlspecialchars($row['message']); ?>
+                        </a>
+                        <span class="timestamp"><?php echo htmlspecialchars($row['created_at']); ?></span>
+                    </li>
+                <?php } ?>
+            </ul>
+        <?php } else { ?>
+            <p>No notifications yet.</p>
+        <?php } ?>
     </div>
+</div>
+
 
     <script>
         // Function to open the notification modal
@@ -81,7 +85,8 @@
             <h1>Welcome, <?php echo htmlspecialchars($freelancer_name); ?>!</h1>
             <p>Find the best freelance projects and start working today.</p>
   
-            <a href="post_service.php" class="post-service-link">Post Services</a>
+            <a href="index.php?controller=service&action=postForm" class="post-service-link">Post Services</a>
+
 
         </div>
     </section>
@@ -127,13 +132,31 @@
 
 
 
-    
- 
 <section class="service-listings">
     <h2>Explore Freelance Services</h2>
     <div class="service-cards">
         <?php if (count($services) > 0): ?>
             <?php foreach ($services as $service): ?>
+                <?php
+                    $createdAt = new DateTime($service['created_at']);
+                    $now = new DateTime();
+                    $interval = $createdAt->diff($now);
+
+                    if ($interval->y > 0) {
+                        $timeAgo = $interval->y . ' year' . ($interval->y > 1 ? 's' : '') . ' ago';
+                    } elseif ($interval->m > 0) {
+                        $timeAgo = $interval->m . ' month' . ($interval->m > 1 ? 's' : '') . ' ago';
+                    } elseif ($interval->d > 0) {
+                        $timeAgo = $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ago';
+                    } elseif ($interval->h > 0) {
+                        $timeAgo = $interval->h . ' hour' . ($interval->h > 1 ? 's' : '') . ' ago';
+                    } elseif ($interval->i > 0) {
+                        $timeAgo = $interval->i . ' minute' . ($interval->i > 1 ? 's' : '') . ' ago';
+                    } else {
+                        $timeAgo = 'Just now';
+                    }
+                ?>
+
                 <div class="service-card">
                     <?php if (!empty($service['media_path'])): ?>
                         <img src="<?= htmlspecialchars($service['media_path']) ?>" alt="Service Image" class="service-img">
@@ -142,14 +165,14 @@
                     <?php endif; ?>
 
                     <div class="service-info">
-                    <h4><?= htmlspecialchars(($service['first_name'] ?? '') . ' ' . ($service['last_name'] ?? '')) ?></h4>
+                        <h4><?= htmlspecialchars(($service['first_name'] ?? '') . ' ' . ($service['last_name'] ?? '')) ?></h4>
 
                         <p class="title"><?= htmlspecialchars($service['service_title']) ?></p>
                         <p class="desc"><?= htmlspecialchars($service['description']) ?></p>
                         <p class="category">Category: <?= htmlspecialchars($service['category']) ?></p>
                         <p class="skills">Skills: <?= htmlspecialchars($service['skills']) ?></p>
                         <p class="expertise">Expertise: <?= htmlspecialchars($service['expertise']) ?></p>
-                        <p class="delivery-time">Delivery Time: <?= htmlspecialchars($service['delivery_time']) ?> days</p>
+                        <p class="posted-time"><strong>Posted:</strong> <?= $timeAgo ?></p>
                         <p class="tags">Tags: <?= htmlspecialchars($service['tags']) ?></p>
                         <p class="price">Price: $<?= number_format($service['price'], 2) ?></p>
                         <p class="rating">
@@ -189,8 +212,3 @@
     </footer>
 </body>
 </html>
-
-<?php
-$stmt->close();
-$conn->close();
-?>

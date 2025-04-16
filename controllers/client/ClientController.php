@@ -1,11 +1,10 @@
 <?php
 require_once __DIR__ . '/../../models/User.php';
 require_once __DIR__ . '/../../models/ClientProfile.php';
+require_once __DIR__ . '/../../models/Job.php';
+require_once __DIR__ . '/../../models/Service.php';
 require_once __DIR__ . '/../../config/db.php';
-
-
-
-
+require_once __DIR__ . '/../../models/Notification.php';
 
 class ClientController {
 
@@ -17,8 +16,7 @@ class ClientController {
             $password = trim($_POST['password']);
             $role = 'client';
 
-            // Basic validation
-            if (empty($first_name) || empty($last_name) || empty($email) || empty($_POST['password'])) {
+            if (empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
                 echo "<script>alert('All fields are required.'); window.location='/Swift-Place/views/auth/client_signup.php';</script>";
                 exit();
             }
@@ -28,13 +26,11 @@ class ClientController {
                 exit();
             }
 
-            // Check if user already exists
             if (User::findByEmail($email)) {
                 echo "<script>alert('Email already registered.'); window.location='/Swift-Place/views/auth/client_signup.php';</script>";
                 exit();
             }
 
-            // Create user
             $result = User::create($first_name, $last_name, $email, $password);
 
             if ($result) {
@@ -49,9 +45,8 @@ class ClientController {
 
     public function login() {
         session_start();
-
-        $max_attempts = 50;
-        $lockout_time = 1 * 2; // 15 minutes
+        $max_attempts = 5;
+        $lockout_time = 15 * 60;
 
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $email = trim($_POST['email']);
@@ -59,14 +54,14 @@ class ClientController {
 
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 echo "<script>alert('Invalid email format.'); window.location='/Swift-Place/views/auth/login.php';</script>";
-                return;
+                exit();
             }
 
             if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] >= $max_attempts) {
                 $remaining_time = $_SESSION['lockout_time'] - time();
                 if ($remaining_time > 0) {
                     echo "<script>alert('Too many failed attempts. Try again in " . ceil($remaining_time / 60) . " minutes.'); window.location='/Swift-Place/views/auth/login.php';</script>";
-                    return;
+                    exit();
                 } else {
                     unset($_SESSION['login_attempts']);
                     unset($_SESSION['lockout_time']);
@@ -78,11 +73,8 @@ class ClientController {
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['first_name'];
+                unset($_SESSION['login_attempts'], $_SESSION['lockout_time']);
 
-                unset($_SESSION['login_attempts']);
-                unset($_SESSION['lockout_time']);
-
-                // ✅ REDIRECT TO DASHBOARD
                 header("Location: /Swift-Place/index.php?controller=client&action=clientDashboard");
                 exit();
             } else {
@@ -90,57 +82,65 @@ class ClientController {
                 if ($_SESSION['login_attempts'] >= $max_attempts) {
                     $_SESSION['lockout_time'] = time() + $lockout_time;
                 }
-                echo "<script>alert('Invalid credentials. Please try again.'); window.location='/Swift-Place/views/auth/login.php';</script>";
+                echo "<script>alert('Invalid email or password.'); window.location='/Swift-Place/views/auth/login.php';</script>";
             }
         } else {
             include __DIR__ . '/../../views/auth/login.php';
         }
     }
 
-    public function clientDashboard() {
+    public function logout()
+    {
         session_start();
+        session_unset();
+        session_destroy();
     
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: index.php?controller=auth&action=login");
-            exit();
-        }
-    
-
-        
-        // Assuming this is where Service model is
-    
-        $client_id = $_SESSION['user_id'];
-        $client = User::getClientById($client_id);
-    
-        if (!$client) {
-            echo "Client";
-            exit();
-        }
-        $client_id = $_SESSION['user_id'];
-        $client = User::getClientById($client_id);
-        $client_name = $client['first_name'] ?? 'Client';
-    
-
-    
-     require_once './models/User.php';
-     require_once './models/Service.php';
-     require_once './models/Job.php';
-   
-     // Add this at the top if not already included
-
-
-
-        $jobs = Job::getAllJobs();
-        Job::deleteExpiredJobs(); // Add this before including the view
-        $services = Service::getAllServices(); // or getServicesByClientId() if you changed the logic
-        
-
-    
-        include __DIR__ . '/../../views/client/dashboard.php';
+        // Redirect directly to the homepage
+        header("Location: views/home/homepage.php");
+        exit();
     }
     
 
 
+    public function clientDashboard() {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?controller=auth&action=login");
+            exit();
+        }
+        $conn = Database::getConnection();
+        $client_id = $_SESSION['user_id'];
+        $client = User::getClientById($client_id);
+    
+        if (!$client) {
+            echo "Client not found.";
+            exit();
+        }
+    
+        $client_name = $client['first_name'] ?? 'Client';
+        $jobs = Job::getAllJobs();
+        Job::deleteExpiredJobs();
+        $services = Service::getAllServices();
+    
+        // Load Client Notifications
+     
+        $notifModel = new ClientNotification($conn);
+        $notifications = $notifModel->getNotificationsByUser($client_id);
+    
+        // Calculate unread notifications
+        $unread_notifications = 0;
+        if ($notifications) {
+            foreach ($notifications as $notif) {
+                if ($notif['is_read'] == 0) {
+                    $unread_notifications++;
+                }
+            }
+        }
+    
+        include __DIR__ . '/../../views/client/dashboard.php';
+    }
+    
+    
 
     public function profile() {
         session_start();
@@ -202,8 +202,38 @@ class ClientController {
             header("Location: index.php?controller=auth&action=login");
             exit();
         }
-    
+
         include 'views/jobs/post_job.php';
+    }
+
+    public function notifications() {
+        session_start();
+    
+        if (!isset($_SESSION['client_id'])) {
+            header("Location: index.php?controller=client&action=login");
+            exit();
+        }
+    
+        $client_id = $_SESSION['client_id'];
+    
+        require_once 'models/Notification.php';
+        $model = new ClientNotification(Database::getConnection());
+    
+        // Mark as read
+        if (isset($_GET['notification_id'])) {
+            $model->markAsRead($_GET['notification_id'], $client_id);
+        }
+    
+        // Delete notification
+        if (isset($_GET['delete_id'])) {
+            $model->deleteNotification($_GET['delete_id'], $client_id);
+            header("Location: index.php?controller=client&action=notifications");
+            exit();
+        }
+    
+        $notifications = $model->getNotificationsByUser($client_id);
+    
+        require 'views/client/notifications.php';
     }
     
 }
