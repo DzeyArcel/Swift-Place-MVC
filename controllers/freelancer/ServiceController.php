@@ -212,5 +212,31 @@ class ServiceController {
     }
 }
 
+public function rateService() {
+    session_start();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $serviceId = $_POST['service_id'] ?? null;
+        $rating = $_POST['rating'] ?? null;
+        $clientId = $_SESSION['client_id'] ?? null;
+
+        if ($serviceId && $rating && $clientId) {
+            $success = Service::rateService($serviceId, $clientId, $rating);
+
+            if ($success) {
+                $_SESSION['success'] = "Thank you for your rating!";
+            } else {
+                $_SESSION['error'] = "You have already rated this service.";
+            }
+        } else {
+            $_SESSION['error'] = "Incomplete rating data.";
+        }
+    }
+
+    // Redirect back to the dashboard or previous page
+    header('Location: /?controller=client&action=dashboard');
+    exit;
+}
+
 
 }

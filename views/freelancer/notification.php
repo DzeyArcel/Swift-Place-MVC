@@ -4,19 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freelancer Notifications</title>
-    <link rel="stylesheet" href="/public/css/freelancernotif.css">
+    <link rel="stylesheet" href="/Swift-Place/public/css/freelancernotif.css">
 </head>
 <body>
     <header>
         <div class="navbar">
             <div class="logo-container">
-                <img src="/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
+                <img src="/Swift-Place/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
             </div>
             <nav>
-                <a href="/index.php?controller=freelancer&action=dashboard">Dashboard</a>
-                <a href="/index.php?controller=freelancer&action=myServices">Your Posted Services</a>
-                <a href="/index.php?controller=freelancer&action=profile">Profile</a>
-                <a href="/index.php?controller=freelancer&action=logout">Logout</a>
+            <a href="index.php?controller=freelancer&action=dashboard">Dashboard</a>
+            <a href="index.php?controller=freelancer&action=myServices">Your Posted Services</a>
+                <a href="../php/freelance_profile.php">Profile</a>
+                <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+
+            </nav>
             </nav>
         </div>
     </header>

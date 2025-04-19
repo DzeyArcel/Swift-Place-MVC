@@ -31,8 +31,21 @@ $bio = $profile['bio'] ?? '';
 
 <section class="Edit">
     <div class="profile-content">
+    <?php
+$picture = !empty($profile['profile_picture']) 
+    ? 'public/uploads/' . $profile['profile_picture'] 
+    : 'public/uploads/no-profile-picture-icon-35.png';
+?>
+
+<section class="Edit">
+    <div class="profile-content">
+        <div class="profile-pic">
+            <img src="<?= htmlspecialchars($picture) ?>" alt="Profile Picture">
+        </div>
+
         <h1>Edit Profile</h1>
-        <form method="POST">
+
+        <form method="POST" enctype="multipart/form-data">
             <label>Phone:</label>
             <input type="text" name="phone" value="<?= htmlspecialchars($phone) ?>" required>
 
@@ -48,6 +61,9 @@ $bio = $profile['bio'] ?? '';
             <label>Bio:</label>
             <textarea name="bio" required><?= htmlspecialchars($bio) ?></textarea>
 
+            <label>Change Profile Picture:</label>
+            <input type="file" name="profile_picture" accept="image/*">
+
             <button type="submit" name="save">Save Profile</button>
 
             <?php if (!empty($phone) && !empty($address)) : ?>
@@ -56,6 +72,7 @@ $bio = $profile['bio'] ?? '';
         </form>
     </div>
 </section>
+
 
 <footer>
     <div class="footer-container">

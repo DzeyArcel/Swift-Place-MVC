@@ -35,7 +35,7 @@
         </div>
     </header>
 
-    <!-- Notification Modal -->
+  
     <!-- Notification Modal -->
 <div id="notification-modal" class="modal">
     <div class="modal-content">
@@ -97,19 +97,7 @@
     <h2>Available Jobs</h2>
     <div class="job-cards">
         <?php foreach ($jobs as $job): 
-            $createdAt = new DateTime($job['created_at']);
-            $now = new DateTime();
-            $interval = $createdAt->diff($now);
-
-            if ($interval->d > 0) {
-                $postedAgo = $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ago';
-            } elseif ($interval->h > 0) {
-                $postedAgo = $interval->h . ' hour' . ($interval->h > 1 ? 's' : '') . ' ago';
-            } elseif ($interval->i > 0) {
-                $postedAgo = $interval->i . ' minute' . ($interval->i > 1 ? 's' : '') . ' ago';
-            } else {
-                $postedAgo = 'Just now';
-            }
+            $postedAgo = Job::formatTimeSincePost($job['posted_at']);
         ?>
             <div class="job-post">
                 <h3><?= htmlspecialchars($job['job_title']) ?></h3>
@@ -121,7 +109,8 @@
                 <p><strong>Experience:</strong> <?= htmlspecialchars($job['experience_level']) ?></p>
                 <p><strong>Posted by:</strong> <?= htmlspecialchars($job['poster_name']) ?></p>
                 <p class="posted-time"><em>Posted: <?= $postedAgo ?></em></p>
-                <form action="index.php?controller=freelancer&action=applyJob" method="post">
+
+                <form action="index.php?controller=freelancerApplication&action=showApplicationForm" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
                     <button class="apply-btn" type="submit">Apply</button>
                 </form>
@@ -132,31 +121,12 @@
 
 
 
+
 <section class="service-listings">
     <h2>Explore Freelance Services</h2>
     <div class="service-cards">
         <?php if (count($services) > 0): ?>
             <?php foreach ($services as $service): ?>
-                <?php
-                    $createdAt = new DateTime($service['created_at']);
-                    $now = new DateTime();
-                    $interval = $createdAt->diff($now);
-
-                    if ($interval->y > 0) {
-                        $timeAgo = $interval->y . ' year' . ($interval->y > 1 ? 's' : '') . ' ago';
-                    } elseif ($interval->m > 0) {
-                        $timeAgo = $interval->m . ' month' . ($interval->m > 1 ? 's' : '') . ' ago';
-                    } elseif ($interval->d > 0) {
-                        $timeAgo = $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ago';
-                    } elseif ($interval->h > 0) {
-                        $timeAgo = $interval->h . ' hour' . ($interval->h > 1 ? 's' : '') . ' ago';
-                    } elseif ($interval->i > 0) {
-                        $timeAgo = $interval->i . ' minute' . ($interval->i > 1 ? 's' : '') . ' ago';
-                    } else {
-                        $timeAgo = 'Just now';
-                    }
-                ?>
-
                 <div class="service-card">
                     <?php if (!empty($service['media_path'])): ?>
                         <img src="<?= htmlspecialchars($service['media_path']) ?>" alt="Service Image" class="service-img">
@@ -172,7 +142,7 @@
                         <p class="category">Category: <?= htmlspecialchars($service['category']) ?></p>
                         <p class="skills">Skills: <?= htmlspecialchars($service['skills']) ?></p>
                         <p class="expertise">Expertise: <?= htmlspecialchars($service['expertise']) ?></p>
-                        <p class="posted-time"><strong>Posted:</strong> <?= $timeAgo ?></p>
+                        <p class="posted-time"><strong>Posted:</strong> <?= Service::formatTimeSincePosted($service['created_at']) ?></p>
                         <p class="tags">Tags: <?= htmlspecialchars($service['tags']) ?></p>
                         <p class="price">Price: $<?= number_format($service['price'], 2) ?></p>
                         <p class="rating">

@@ -1,5 +1,6 @@
 <?php
 require_once 'models/Job.php';
+require_once 'models/Notification.php';
 
 class JobController {
     public function postJob() {
@@ -53,6 +54,7 @@ class JobController {
 
         $client_id = $_SESSION['user_id'];
         $jobs = Job::getJobsByClient($client_id);
+
 
         include 'views/client/my_posted_jobs.php';
     }
@@ -138,7 +140,6 @@ class JobController {
             }
         }
     }
-    
-    
+
     
 }

@@ -1,16 +1,18 @@
 <?php
 // config/db.php
 
-if (!class_exists('Database')) {
-    class Database {
-        public static function getConnection() {
-            $conn = new mysqli('localhost', 'root', '', 'swiftplace');
+class Database {
+    private static $conn = null;
 
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
+    public static function getConnection() {
+        if (self::$conn === null) {
+            self::$conn = new mysqli('localhost', 'root', '', 'swiftplace');
+            if (self::$conn->connect_error) {
+                die("Connection failed: " . self::$conn->connect_error);
             }
-
-            return $conn;
         }
+        return self::$conn;
     }
 }
+
+

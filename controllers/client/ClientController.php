@@ -5,6 +5,8 @@ require_once __DIR__ . '/../../models/Job.php';
 require_once __DIR__ . '/../../models/Service.php';
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../models/Notification.php';
+require_once __DIR__ . '/../../models/Application.php';
+
 
 class ClientController {
 
@@ -104,10 +106,12 @@ class ClientController {
 
     public function clientDashboard() {
         session_start();
+        
         if (!isset($_SESSION['user_id'])) {
             header("Location: index.php?controller=auth&action=login");
             exit();
         }
+    
         $conn = Database::getConnection();
         $client_id = $_SESSION['user_id'];
         $client = User::getClientById($client_id);
@@ -118,24 +122,16 @@ class ClientController {
         }
     
         $client_name = $client['first_name'] ?? 'Client';
-        $jobs = Job::getAllJobs();
+        
+        // Fetch data
         Job::deleteExpiredJobs();
+        $jobs = Job::getAllJobs();
         $services = Service::getAllServices();
     
-        // Load Client Notifications
-     
-        $notifModel = new ClientNotification($conn);
-        $notifications = $notifModel->getNotificationsByUser($client_id);
-    
-        // Calculate unread notifications
-        $unread_notifications = 0;
-        if ($notifications) {
-            foreach ($notifications as $notif) {
-                if ($notif['is_read'] == 0) {
-                    $unread_notifications++;
-                }
-            }
-        }
+        // Notifications
+        $clientNotif = new ClientNotification($conn);
+        $notifications = $clientNotif->getNotificationsByUser($client_id);
+        $unread_notifications = $clientNotif->getUnreadCount($client_id); // simplified
     
         include __DIR__ . '/../../views/client/dashboard.php';
     }
@@ -209,31 +205,53 @@ class ClientController {
     public function notifications() {
         session_start();
     
-        if (!isset($_SESSION['client_id'])) {
-            header("Location: index.php?controller=client&action=login");
+        // Fix: Check for 'user_id', not 'client_id'
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?controller=auth&action=login");
             exit();
         }
     
-        $client_id = $_SESSION['client_id'];
+        $client_id = $_SESSION['user_id'];
     
-        require_once 'models/Notification.php';
+        require_once 'models/notification.php';
         $model = new ClientNotification(Database::getConnection());
     
-        // Mark as read
-        if (isset($_GET['notification_id'])) {
-            $model->markAsRead($_GET['notification_id'], $client_id);
+        // Mark notification as read
+        if (isset($_GET['notification_id']) && is_numeric($_GET['notification_id'])) {
+            $model->markAsRead((int)$_GET['notification_id'], $client_id);
         }
     
         // Delete notification
-        if (isset($_GET['delete_id'])) {
-            $model->deleteNotification($_GET['delete_id'], $client_id);
+        if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
+            $model->deleteNotification((int)$_GET['delete_id'], $client_id);
             header("Location: index.php?controller=client&action=notifications");
             exit();
         }
     
         $notifications = $model->getNotificationsByUser($client_id);
     
-        require 'views/client/notifications.php';
+        require 'views/client/notification.php';
     }
+    
+    public function viewApplications()
+    {
+        session_start(); // make sure this is only called once, and not conflicting
+    
+        if (!isset($_SESSION['user_id'])) {
+            // Redirects to login if session isn't set
+            header("Location: index.php?controller=client&action=login");
+            exit();
+        }
+    
+        $clientId = $_SESSION['user_id'];
+        $applicationModel = new Application(Database::getConnection());
+        $applications = $applicationModel->getApplicationsByClient($clientId);
+    
+        require 'views/client/applications.php';
+    }
+    
+
+    
+
     
 }

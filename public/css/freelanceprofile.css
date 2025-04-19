@@ -103,6 +103,15 @@ body {
     transform: scale(1.1);
 }
 
+.profile-pic img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ccc;
+}
+
+
 /* Profile Content */
 .profile-content {
     margin-left: 280px;

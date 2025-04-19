@@ -32,17 +32,24 @@ class FreelancerProfile {
         return $stmt->num_rows > 0;
     }
 
-    public function updateProfile($freelancer_id, $phone, $address, $skills, $experience, $bio) {
-        $stmt = $this->conn->prepare("UPDATE freelancer_profile SET phone = ?, address = ?, skills = ?, experience = ?, bio = ? WHERE freelancer_id = ?");
-        $stmt->bind_param("sssssi", $phone, $address, $skills, $experience, $bio, $freelancer_id);
+    public function updateProfile($freelancer_id, $phone, $address, $skills, $experience, $bio, $profilePicture = null) {
+        if ($profilePicture) {
+            $stmt = $this->conn->prepare("UPDATE freelancer_profile SET phone = ?, address = ?, skills = ?, experience = ?, bio = ?, profile_picture = ? WHERE freelancer_id = ?");
+            $stmt->bind_param("ssssssi", $phone, $address, $skills, $experience, $bio, $profilePicture, $freelancer_id);
+        } else {
+            $stmt = $this->conn->prepare("UPDATE freelancer_profile SET phone = ?, address = ?, skills = ?, experience = ?, bio = ? WHERE freelancer_id = ?");
+            $stmt->bind_param("ssssssi", $phone, $address, $skills, $experience, $bio, $freelancer_id);
+        }
         return $stmt->execute();
     }
-
-    public function createProfile($freelancer_id, $phone, $address, $skills, $experience, $bio) {
-        $stmt = $this->conn->prepare("INSERT INTO freelancer_profile (freelancer_id, phone, address, skills, experience, bio) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("isssss", $freelancer_id, $phone, $address, $skills, $experience, $bio);
+    
+    
+    public function createProfile($freelancer_id, $phone, $address, $skills, $experience, $bio, $profilePicture = null) {
+        $stmt = $this->conn->prepare("INSERT INTO freelancer_profile (freelancer_id, phone, address, skills, experience, bio, profile_picture) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("issssss", $freelancer_id, $phone, $address, $skills, $experience, $bio, $profilePicture);
         return $stmt->execute();
     }
+    
 
     public function deleteProfile($freelancer_id) {
         $stmt = $this->conn->prepare("DELETE FROM freelancer_profile WHERE freelancer_id = ?");

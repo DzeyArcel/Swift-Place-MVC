@@ -68,12 +68,16 @@ class Job {
         $now = new DateTime();
         $interval = $postedTime->diff($now);
     
-        if ($interval->d > 0) {
-            return $interval->d . ' day(s) ago';
+        if ($interval->d >= 30) {
+            return $postedTime->format('F j, Y'); // Example: March 14, 2025
+        } elseif ($interval->d > 0) {
+            return $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ago';
         } elseif ($interval->h > 0) {
-            return $interval->h . ' hour(s) ago';
+            return $interval->h . ' hour' . ($interval->h > 1 ? 's' : '') . ' ago';
+        } elseif ($interval->i > 0) {
+            return $interval->i . ' minute' . ($interval->i > 1 ? 's' : '') . ' ago';
         } else {
-            return $interval->i . ' minute(s) ago';
+            return 'Just now';
         }
     }
     
@@ -160,6 +164,35 @@ public static function update($id, $client_id, $title, $description, $category, 
         $conn->close();
         return $jobs;
     }
+
+
+
+public static function findById($jobId) {
+    $conn = Database::getConnection();
+
+    $stmt = $conn->prepare("SELECT * FROM jobs WHERE id = ?");
+    $stmt->bind_param("i", $jobId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
+        return $result->fetch_assoc();
+    }
+
+    return false;
+}
+
+public function getJobById($job_id) {
+    $conn = Database::getConnection();
+    $stmt = $conn->prepare("SELECT * FROM jobs WHERE id = ?");
+    $stmt->bind_param("i", $job_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $job = $result->fetch_assoc();
+    $stmt->close();
+    return $job;
+}
+
 }
 
 

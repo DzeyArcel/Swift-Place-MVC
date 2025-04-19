@@ -14,22 +14,15 @@
         <input type="text" placeholder="Search for services...">
         <nav>
         <li><a href="index.php?controller=client&action=Clientdashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-            <a href="/views/client/client_view_application.php">Application</a>
+        <a href="index.php?controller=client&action=viewApplications">View Applications</a>
             <a href="index.php?controller=job&action=myJobs">Your Posted Jobs</a>
             <a href="index.php?controller=client&action=profile">Profile</a>
             <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
 
 
-            <div class="notification-icon" id="notification-icon">
-                <a href="javascript:void(0)" onclick="openNotificationModal()">
-                    <i class="fa fa-bell"></i>
-                    <?php if ($unread_notifications > 0): ?>
-                        <span class="notification-count"><?= $unread_notifications ?></span>
-                    <?php endif; ?>
-                </a>
-            </div>
-        </nav>
-    </div>
+
+</div>
+
 </header>
 
     <h2>My Posted Jobs</h2>

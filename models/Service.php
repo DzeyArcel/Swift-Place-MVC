@@ -156,4 +156,44 @@ class Service {
     return $success;
 }
 
+
+
+public static function formatTimeSincePosted($created_at) {
+    $createdAt = new DateTime($created_at);
+    $now = new DateTime();
+    $interval = $createdAt->diff($now);
+
+    if ($interval->y > 0) {
+        return $interval->y . ' year' . ($interval->y > 1 ? 's' : '') . ' ago';
+    } elseif ($interval->m > 0) {
+        return $interval->m . ' month' . ($interval->m > 1 ? 's' : '') . ' ago';
+    } elseif ($interval->d > 0) {
+        return $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ago';
+    } elseif ($interval->h > 0) {
+        return $interval->h . ' hour' . ($interval->h > 1 ? 's' : '') . ' ago';
+    } elseif ($interval->i > 0) {
+        return $interval->i . ' minute' . ($interval->i > 1 ? 's' : '') . ' ago';
+    } else {
+        return 'Just now';
+    }
+}
+
+
+public static function rateService($serviceId, $clientId, $rating) {
+    $conn = Database::getConnection();
+
+    // Prevent duplicate rating
+    $check = $conn->prepare("SELECT * FROM ratings WHERE service_id = ? AND client_id = ?");
+    $check->execute([$serviceId, $clientId]);
+
+    if ($check->rowCount() > 0) {
+        return false; // Already rated
+    }
+
+    // Insert new rating
+    $stmt = $conn->prepare("INSERT INTO ratings (service_id, client_id, rating, created_at) VALUES (?, ?, ?, NOW())");
+    return $stmt->execute([$serviceId, $clientId, $rating]);
+}
+
+
 }

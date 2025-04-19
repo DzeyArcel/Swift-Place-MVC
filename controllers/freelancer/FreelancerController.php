@@ -213,11 +213,23 @@ public function dashboard() {
             $experience = trim($_POST['experience'] ?? '');
             $bio = trim($_POST['bio'] ?? '');
     
+            // Handle image upload if exists
+            $profilePicture = null;
+            if (!empty($_FILES['profile_picture']['name'])) {
+                $uploadDir = 'public/uploads/';
+                $filename = uniqid() . '_' . basename($_FILES['profile_picture']['name']);
+                $targetFile = $uploadDir . $filename;
+    
+                if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $targetFile)) {
+                    $profilePicture = $filename;
+                }
+            }
+    
             if (isset($_POST['save'])) {
                 if ($model->profileExists($freelancer_id)) {
-                    $model->updateProfile($freelancer_id, $phone, $address, $skills, $experience, $bio);
+                    $model->updateProfile($freelancer_id, $phone, $address, $skills, $experience, $bio, $profilePicture);
                 } else {
-                    $model->createProfile($freelancer_id, $phone, $address, $skills, $experience, $bio);
+                    $model->createProfile($freelancer_id, $phone, $address, $skills, $experience, $bio, $profilePicture);
                 }
                 header("Location: index.php?controller=freelancer&action=profile");
                 exit();
@@ -233,8 +245,9 @@ public function dashboard() {
         $profile = $model->getProfile($freelancer_id);
         require 'views/freelancer/edit_profile.php';
     }
+
     
-    public function notifications() {
+        public function notifications() {
         session_start();
         if (!isset($_SESSION['freelancer_id'])) {
             header("Location: index.php?controller=freelancer&action=login");
@@ -242,7 +255,7 @@ public function dashboard() {
         }
     
         require_once 'models/Notification.php';
-        $model = new Notification(Database::getConnection());
+        $model = new FreelancerNotification(Database::getConnection());
     
         $freelancer_id = $_SESSION['freelancer_id'];
     
@@ -260,7 +273,7 @@ public function dashboard() {
     
         $notifications = $model->getNotificationsByUser($freelancer_id);
     
-        require 'views/freelancer/notifications.php';
+        require 'views/freelancer/notification.php';
     }
     
     

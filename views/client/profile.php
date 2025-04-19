@@ -10,7 +10,7 @@
 
 <header class="topbar">
     <div class="logo-container">
-        <img src="../photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
+        <img src="/Swift-Place/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
     </div>
     <nav class="nav-links">
         <ul>
@@ -34,24 +34,25 @@ $address = $profile['address'] ?? '';
 $profile_pic = $profile['profile_pic'] ?? 'default.jpg';
 ?>
 
-<section class="profile-content">
-    <h1>Client Profile</h1>
-    
-    <div class="profile-header">
-        <h2><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h2>
+<div class="client-profile-wrapper">
+<h1>Client Profile</h1>
+    <div class="profile-pic-container">
+        
+        <img src="public/uploads/<?php echo htmlspecialchars($profile_pic); ?>" 
+             alt="Profile Picture" 
+             class="profile-pic">
     </div>
 
-    <div class="profile-image">
-        <img src="public/uploads/<?php echo htmlspecialchars($profile_pic); ?>" alt="Profile Picture">
-    </div>
+    <h2 class="client-name"><?php echo htmlspecialchars($first_name . " " . $last_name); ?></h2>
+    <p class="client-email"><?php echo htmlspecialchars($email); ?></p>
 
     <div class="profile-info">
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
         <p><strong>Contact:</strong> <?php echo htmlspecialchars($contact); ?></p>
         <p><strong>Address:</strong> <?php echo htmlspecialchars($address); ?></p>
         <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($bio)); ?></p>
     </div>
-</section>
+</div>
+
 
 
 <footer>

@@ -26,18 +26,23 @@
 <!-- Profile Content -->
 <div class="profile-content">
     <h1>Freelancer Profile</h1>
-    <div class="profile-pic">
-        <img src="<?php echo htmlspecialchars($profile['profile_picture'] ?? 'public/uploads/no-profile-picture-icon-35.png'); ?>" alt="Profile Picture">
-    </div>
+    
+    <?php
+$picture = !empty($profile['profile_picture']) ? 'public/uploads/' . $profile['profile_picture'] : 'public/uploads/no-profile-picture-icon-35.png';
+?>
+<div class="profile-pic">
+    <img src="<?= htmlspecialchars($picture) ?>" alt="Profile Picture">
+</div>
 
-    <h2><?php echo htmlspecialchars($basicInfo['first_name'] . ' ' . $basicInfo['last_name']); ?></h2>
-    <p><?php echo htmlspecialchars($basicInfo['email']); ?></p>
+
+    <h2><?= htmlspecialchars($basicInfo['first_name'] . ' ' . $basicInfo['last_name']) ?></h2>
+    <p><?= htmlspecialchars($basicInfo['email']) ?></p>
     <p><strong>Category:</strong> <?= htmlspecialchars($basicInfo['job_category']) ?></p>
-    <p><strong>Phone:</strong> <?php echo htmlspecialchars($profile['phone'] ?? 'Not set'); ?></p>
-    <p><strong>Address:</strong> <?php echo htmlspecialchars($profile['address'] ?? 'Not set'); ?></p>
-    <p><strong>Skills:</strong> <?php echo htmlspecialchars($profile['skills'] ?? 'Not set'); ?></p>
-    <p><strong>Experience:</strong> <?php echo htmlspecialchars($profile['experience'] ?? 'Not set'); ?></p>
-    <p><strong>Bio:</strong> <?php echo htmlspecialchars($profile['bio'] ?? 'Not set'); ?></p>
+    <p><strong>Phone:</strong> <?= htmlspecialchars($profile['phone'] ?? 'Not set') ?></p>
+    <p><strong>Address:</strong> <?= htmlspecialchars($profile['address'] ?? 'Not set') ?></p>
+    <p><strong>Skills:</strong> <?= htmlspecialchars($profile['skills'] ?? 'Not set') ?></p>
+    <p><strong>Experience:</strong> <?= htmlspecialchars($profile['experience'] ?? 'Not set') ?></p>
+    <p><strong>Bio:</strong> <?= htmlspecialchars($profile['bio'] ?? 'Not set') ?></p>
 </div>
 
 <footer>

@@ -1,7 +1,8 @@
 <?php
 date_default_timezone_set('Asia/Manila');
 
-// Default controller and action
+define('BASE_URL', '/Swift-Place'); // Change if your project folder has a different name
+
 $controller = $_GET['controller'] ?? 'home';
 $action = $_GET['action'] ?? 'index';
 
@@ -14,6 +15,11 @@ switch ($controller) {
     case 'freelancer':
         $controllerFile = $controllerDir . 'freelancer/FreelancerController.php';
         $className = 'FreelancerController';
+        break;
+
+    case 'freelancerApplication':
+        $controllerFile = $controllerDir . 'freelancer/FreelancerApplicationController.php';
+        $className = 'FreelancerApplicationController';
         break;
 
     case 'client':
@@ -41,11 +47,12 @@ switch ($controller) {
         exit();
 
     default:
-        echo "❌ Unknown controller '$controller'.";
+        echo "❌ Unknown controller '$controller'.<br>";
+        echo "<a href='" . BASE_URL . "/index.php'>Go to Home</a>";
         exit();
 }
 
-// Load and run controller
+// Load controller file
 if (file_exists($controllerFile)) {
     require_once $controllerFile;
 
@@ -56,11 +63,14 @@ if (file_exists($controllerFile)) {
             $controllerInstance->$action();
             exit();
         } else {
-            echo "❌ Method '$action' not found in controller '$className'.";
+            echo "❌ Method '$action' not found in controller '$className'.<br>";
+            echo "<a href='" . BASE_URL . "/index.php'>Go to Home</a>";
         }
     } else {
-        echo "❌ Class '$className' not found in $controllerFile.";
+        echo "❌ Class '$className' not found in $controllerFile.<br>";
+        echo "<a href='" . BASE_URL . "/index.php'>Go to Home</a>";
     }
 } else {
-    echo "❌ Controller file not found: $controllerFile";
+    echo "❌ Controller file not found: $controllerFile<br>";
+    echo "<a href='" . BASE_URL . "/index.php'>Go to Home</a>";
 }
