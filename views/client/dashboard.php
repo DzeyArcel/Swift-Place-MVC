@@ -113,15 +113,27 @@ if (!isset($_SESSION['user_id'])) {
         <?php if (!empty($services)): ?>
             <?php foreach ($services as $service): ?>
                 <?php
-                    $imagePath = !empty($service['media_path']) 
-                        ? '/public/uploads/' . htmlspecialchars($service['media_path']) 
-                        : '/public/photos/default-service.jpg';
+                    // Service image (already full path or partial path from DB)
+                    $imagePath = !empty($service['media_path'])
+                        ? htmlspecialchars($service['media_path'])
+                        : 'public/photos/default-service.jpg';
+
+                    // Profile picture with fallback
+                    $profilePic = !empty($service['profile_picture'])
+                        ? 'public/uploads/' . htmlspecialchars($service['profile_picture'])
+                        : 'public/uploads/default_profile.png';
 
                     $postedTime = Service::formatTimeSincePosted($service['created_at']);
+                    $freelancerName = htmlspecialchars(($service['first_name'] ?? '') . ' ' . ($service['last_name'] ?? ''));
                 ?>
                 <div class="card">
                     <img class="service-img" src="<?= $imagePath ?>" alt="Service Image">
                     <div class="card-content">
+                        <div class="freelancer-info">
+                            <img src="<?= $profilePic ?>" class="profile-img" alt="Freelancer Photo">
+                            <h4><?= $freelancerName ?></h4>
+                        </div>
+
                         <h3><?= htmlspecialchars($service['service_title']) ?></h3>
                         <p><strong>Category:</strong> <?= htmlspecialchars($service['category']) ?></p>
                         <p><strong>Expertise:</strong> <?= htmlspecialchars($service['expertise']) ?></p>
@@ -131,7 +143,6 @@ if (!isset($_SESSION['user_id'])) {
                         <p><strong>Posted:</strong> <?= $postedTime ?></p>
 
                         <form action="/?controller=client/service&action=rateService" method="post" class="rating-form">
-
                             <input type="hidden" name="service_id" value="<?= htmlspecialchars($service['id']) ?>">
                             <div class="stars">
                                 <?php for ($i = 5; $i >= 1; $i--): ?>
@@ -151,15 +162,30 @@ if (!isset($_SESSION['user_id'])) {
 </section>
 
 
+
+
+
+
 <!-- Job List Section -->
 <section class="job-section">
     <h2>Explore Jobs</h2>
     <div class="job-grid">
         <?php while ($job = $jobs->fetch_assoc()): ?>
+            <?php
+                // Assuming the profile picture is stored in the client_profiles table
+                // You might need to fetch the client profile pic here.
+                $clientProfilePic = !empty($job['client_profile_picture'])
+                    ? 'public/uploads/' . htmlspecialchars($job['client_profile_picture'])
+                    : 'public/uploads/default_profile.png'; // Default picture if not available
+            ?>
             <div class="job-card">
-                <h3><?= htmlspecialchars($job['job_title']) ?></h3>
-                <p class="posted-time"><em>Posted: <?= Job::formatTimeSincePost($job['posted_at']) ?></em></p>
-
+                <div class="job-header">
+                    <img src="<?= $clientProfilePic ?>" alt="Client Profile" class="client-profile-pic">
+                    <div class="job-info">
+                        <h3><?= htmlspecialchars($job['job_title']) ?></h3>
+                        <p class="posted-time"><em>Posted: <?= Job::formatTimeSincePost($job['posted_at']) ?></em></p>
+                    </div>
+                </div>
                 <p><strong>Poster/Client:</strong> <?= htmlspecialchars($job['poster_name']) ?></p>
                 <p><strong>Category:</strong> <?= htmlspecialchars($job['category']) ?></p>
                 <p><strong>Budget:</strong> $<?= number_format($job['budget'], 2) ?></p>
@@ -168,11 +194,12 @@ if (!isset($_SESSION['user_id'])) {
                 <p><strong>Type:</strong> <?= htmlspecialchars($job['job_type']) ?></p>
                 <p><strong>Experience:</strong> <?= htmlspecialchars($job['experience_level']) ?></p>
                 <p class="desc"><?= nl2br(htmlspecialchars($job['job_description'])) ?></p>
-
             </div>
         <?php endwhile; ?>
     </div>
 </section>
+
+
 
 <!-- Footer -->
 <footer>

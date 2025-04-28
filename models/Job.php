@@ -7,11 +7,14 @@ class Job {
         $conn = Database::getConnection();
     
         $stmt = $conn->prepare("
-            SELECT jobs.*, users.first_name AS poster_name
-            FROM jobs
-            JOIN users ON jobs.client_id = users.id
-            ORDER BY jobs.created_at DESC
-        ");
+             SELECT jobs.*, 
+               users.first_name AS poster_name, 
+               client_profiles.profile_pic AS client_profile_picture
+        FROM jobs
+        JOIN users ON jobs.client_id = users.id
+        JOIN client_profiles ON users.id = client_profiles.user_id
+        ORDER BY jobs.posted_at DESC
+    ");
     
         if ($stmt) {
             $stmt->execute();

@@ -42,6 +42,11 @@
                     <p><strong>Skills Used:</strong></p>
                     <p class="skills"><?= nl2br(htmlspecialchars($app['skills_used'])) ?></p>
 
+                    <p><strong>Questions / Clarifications:</strong></p>
+                    <p class="questions"><?= nl2br(htmlspecialchars($app['questions_clarifications'])) ?></p>
+
+                    <p><strong>Availability:</strong> <?= htmlspecialchars($app['availability']) ?> (hours/week)</p>
+
                     <?php if (!empty($app['attachment'])): ?>
                         <a href="public/uploads/<?= htmlspecialchars($app['attachment']) ?>" class="view-btn" target="_blank">View Attachment</a>
                     <?php else: ?>
@@ -49,14 +54,26 @@
                     <?php endif; ?>
 
                     <div class="action-buttons">
-                        <form action="index.php?controller=client&action=acceptApplication" method="post" style="display:inline;">
-                            <input type="hidden" name="application_id" value="<?= $app['id'] ?>">
-                            <button type="submit" class="accept-btn">Accept</button>
-                        </form>
-                        <form action="index.php?controller=client&action=rejectApplication" method="post" style="display:inline;">
-                            <input type="hidden" name="application_id" value="<?= $app['id'] ?>">
-                            <button type="submit" class="reject-btn">Reject</button>
-                        </form>
+
+                    <form action="index.php?controller=application&action=acceptApplication" method="post">
+    <input type="hidden" name="application_id" value="<?= $app['id'] ?>">
+    <button type="submit" class="accept-btn">Accept</button>
+</form>
+
+<!-- Reject Application Form -->
+<form action="index.php?controller=application&action=rejectApplication" method="post">
+    <input type="hidden" name="application_id" value="<?= $app['id'] ?>">
+    <button type="submit" class="reject-btn">Reject</button>
+</form>
+
+
+
+                        <form action="index.php?controller=client&action=messageFreelancer" method="get" style="display:inline;">
+    <input type="hidden" name="freelancer_id" value="<?= $app['freelancer_id'] ?>">
+    <button type="submit" class="message-btn">Message Freelancer</button>
+</form>
+
+
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -65,6 +82,7 @@
         <p class="no-applications">No applications received yet.</p>
     <?php endif; ?>
 </main>
+
 
 </body>
 </html>

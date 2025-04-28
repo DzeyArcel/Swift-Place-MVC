@@ -34,7 +34,7 @@ $bio = $profile['bio'] ?? '';
     <?php
 $picture = !empty($profile['profile_picture']) 
     ? 'public/uploads/' . $profile['profile_picture'] 
-    : 'public/uploads/no-profile-picture-icon-35.png';
+    : 'public/uploads/default_profile.png';
 ?>
 
 <section class="Edit">

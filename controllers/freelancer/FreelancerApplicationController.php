@@ -35,7 +35,7 @@ public function submitApplication()
 {
     session_start();
     if (!isset($_SESSION['freelancer_id'])) {
-        header("Location: /index.php?controller=freelancer&action=login");
+        header("Location: index.php?controller=freelancer&action=login");
         exit();
     }
 
@@ -43,11 +43,10 @@ public function submitApplication()
     $jobId = $_POST['job_id'];
     $coverLetter = $_POST['cover_letter'];
     $expectedDuration = $_POST['expected_duration'];
-    $proposedBudget = $_POST['proposed_budget'];
     $experienceSummary = $_POST['experience_summary'];
     $skillsUsed = $_POST['skills_used'];
-    $availableStartDate = $_POST['available_start_date'];
-    $expectedEndDate = $_POST['expected_end_date'];
+    $questions = $_POST['questions_clarifications'];
+    $availability = $_POST['availability'];
 
     // Handle file upload
     $attachment = null;
@@ -59,8 +58,6 @@ public function submitApplication()
         }
     }
 
-    // ✅ Instantiate Application model and call create()
-
     $applicationModel = new Application(Database::getConnection());
 
     $result = $applicationModel->create([
@@ -68,19 +65,66 @@ public function submitApplication()
         'job_id' => $jobId,
         'cover_letter' => $coverLetter,
         'expected_duration' => $expectedDuration,
-        'proposed_budget' => $proposedBudget,
         'experience_summary' => $experienceSummary,
         'skills_used' => $skillsUsed,
-        'available_start_date' => $availableStartDate,
-        'expected_end_date' => $expectedEndDate,
+        'questions_clarifications' => $questions,
+        'availability' => $availability,
         'attachment' => $attachment,
     ]);
 
     if ($result) {
-        header("Location: /index.php?controller=freelancer&action=dashboard&success=applied");
+        // 🛎️ After successful application, notify the client
+        $db = Database::getConnection();
 
+        // 1. Get client ID and job title
+        $stmt = $db->prepare("SELECT client_id, job_title FROM jobs WHERE id = ?");
+        if (!$stmt) {
+            die('Prepare failed: (' . $db->errno . ') ' . $db->error);
+        }
+        $stmt->bind_param("i", $jobId);
+        $stmt->execute();
+        $stmt->bind_result($clientId, $jobTitle);
+        $stmt->fetch();
+        $stmt->close();
+
+        if ($clientId) {
+            // 2. Get freelancer name
+            $stmt = $db->prepare("SELECT first_name, last_name FROM freelancers WHERE id = ?");
+            if (!$stmt) {
+                die('Prepare failed: (' . $db->errno . ') ' . $db->error);
+            }
+            $stmt->bind_param("i", $freelancerId);
+            $stmt->execute();
+            $stmt->bind_result($firstName, $lastName);
+            $stmt->fetch();
+            $stmt->close();
+
+            $freelancerName = $firstName . ' ' . $lastName;
+
+            // 3. Create a custom notification message
+            $notificationText = "$freelancerName applied for your job \"$jobTitle\".";
+
+            
+         // 4. Insert into client_notifications
+// 4. Insert into notifications (for client)
+$stmt = $db->prepare("INSERT INTO notifications (user_id, type, message, is_read, created_at) VALUES (?, 'client', ?, 0, NOW())");
+if (!$stmt) {
+    die('Prepare failed: (' . $db->errno . ') ' . $db->error);
+}
+$stmt->bind_param("is", $clientId, $notificationText);
+$stmt->execute();
+$stmt->close();
+
+
+        }
+
+        // 5. Redirect back to freelancer dashboard
+        header("Location: index.php?controller=freelancer&action=dashboard&success=applied");
+        exit();
     } else {
         echo "Something went wrong!";
     }
 }
+
+
 }

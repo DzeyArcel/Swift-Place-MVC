@@ -127,7 +127,7 @@ public function dashboard() {
 
     // Redirect if not logged in
     if (!isset($_SESSION['freelancer_id'])) {
-        header("Location: /Swift-Place/index.php?controller=freelancer&action=loginForm");
+        header("Location: /Swift-Place/index.php?controller=freelancer&action=showLogin");
         exit();
     }
 
@@ -247,32 +247,37 @@ public function dashboard() {
     }
 
     
-        public function notifications() {
+    public function notifications() {
         session_start();
+        // Ensure freelancer is logged in
         if (!isset($_SESSION['freelancer_id'])) {
             header("Location: index.php?controller=freelancer&action=login");
             exit();
         }
     
+        // Include the Notification model for freelancers
         require_once 'models/Notification.php';
         $model = new FreelancerNotification(Database::getConnection());
     
+        // Get the freelancer's ID from the session
         $freelancer_id = $_SESSION['freelancer_id'];
     
-       // Mark as read
-    if (isset($_GET['notification_id'])) {
-        $model->markAsRead($_GET['notification_id'], $freelancer_id);
-    }
-
-    // Delete
-    if (isset($_GET['delete_id'])) {
-        $model->deleteNotification($_GET['delete_id'], $freelancer_id);
-        header("Location: index.php?controller=freelancer&action=notifications");
-        exit();
-    }
+        // Mark notification as read if `notification_id` is passed
+        if (isset($_GET['notification_id'])) {
+            $model->markAsRead($_GET['notification_id'], $freelancer_id);
+        }
     
+        // Delete notification if `delete_id` is passed
+        if (isset($_GET['delete_id'])) {
+            $model->deleteNotification($_GET['delete_id'], $freelancer_id);
+            header("Location: index.php?controller=freelancer&action=notifications");
+            exit();
+        }
+    
+        // Get all notifications for the freelancer
         $notifications = $model->getNotificationsByUser($freelancer_id);
     
+        // Load the notifications view
         require 'views/freelancer/notification.php';
     }
     

@@ -61,30 +61,28 @@
 
     
     <label>Cover Letter:</label>
-    <textarea name="cover_letter" required></textarea><br>
+<textarea name="cover_letter" required></textarea><br>
 
-    <label>Expected Duration:</label>
-    <input type="text" name="expected_duration" required><br>
+<label>Estimated Completion Time:</label>
+<input type="text" name="expected_duration" required><br>
 
-    <label>Proposed Budget:</label>
-    <input type="number" name="proposed_budget" required><br>
+<label>Experience Summary:</label>
+<textarea name="experience_summary" required></textarea><br>
 
-    <label>Experience Summary:</label>
-    <textarea name="experience_summary" required></textarea><br>
+<label>Skills Used:</label>
+<textarea name="skills_used" required></textarea><br>
 
-    <label>Skills Used:</label>
-    <textarea name="skills_used" required></textarea><br>
+<label>Questions or Clarifications:</label>
+<textarea name="questions_clarifications"></textarea><br>
 
-    <label>Available Start Date:</label>
-    <input type="date" name="available_start_date" required><br>
+<label>Availability (hour's/day):</label>
+<input type="number" name="availability" required><br>
 
-    <label>Expected End Date:</label>
-    <input type="date" name="expected_end_date" required><br>
+<label>Attachment/Work Samples (Optional):</label>
+<input type="file" name="attachment"><br><br>
 
-    <label>Attachment (Optional):</label>
-    <input type="file" name="attachment"><br><br>
+<button type="submit">Apply</button>
 
-    <button type="submit">Apply</button>
 </form>
 
 

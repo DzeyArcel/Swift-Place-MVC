@@ -38,7 +38,10 @@
                         </a>
                         <span class="timestamp"><?= htmlspecialchars($row['created_at']) ?></span>
                     </div>
-                    <a href="index.php?controller=client&action=notifications&delete_id=<?= $row['id'] ?>" class="delete-notification" onclick="return confirm('Delete this notification?')">Delete</a>
+                    <!-- Fixed the incorrect variable name here -->
+                    <a href="index.php?controller=client&action=notifications&delete_id=<?= $row['id'] ?>" 
+                       class="delete-notification" 
+                       onclick="return confirm('Delete this notification?')">Delete</a>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -46,6 +49,7 @@
         <p>No notifications yet.</p>
     <?php endif; ?>
 </section>
+
 
 </body>
 </html>

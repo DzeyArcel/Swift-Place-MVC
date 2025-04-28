@@ -20,7 +20,7 @@
       <label for="category">Category</label>
       <input type="text" id="category" name="category" required>
 
-      <label for="budget">Budget ($)</label>
+      <label for="budget">Salary ($)</label>
       <input type="number" id="budget" name="budget" required>
 
       <label for="deadline">Deadline</label>

@@ -37,18 +37,18 @@
 
   
     <!-- Notification Modal -->
-<div id="notification-modal" class="modal">
+    <div id="notification-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeNotificationModal()">&times;</span>
         <h3>Notifications</h3>
         <?php if (!empty($notifications)) { ?>
             <ul>
                 <?php foreach ($notifications as $row) { ?>
-                    <li class="notification-item <?php echo $row['is_read'] == 0 ? 'unread' : ''; ?>">
+                    <li class="notification-item <?= $row['is_read'] == 0 ? 'unread' : ''; ?>">
                         <a href="index.php?controller=freelancer&action=notifications&notification_id=<?= $row['id'] ?>">
-                            <?php echo htmlspecialchars($row['message']); ?>
+                            <?= htmlspecialchars($row['message']); ?>
                         </a>
-                        <span class="timestamp"><?php echo htmlspecialchars($row['created_at']); ?></span>
+                        <span class="timestamp"><?= htmlspecialchars($row['created_at']); ?></span>
                     </li>
                 <?php } ?>
             </ul>
@@ -57,6 +57,7 @@
         <?php } ?>
     </div>
 </div>
+
 
 
     <script>
@@ -121,22 +122,48 @@
 
 
 
-
 <section class="service-listings">
     <h2>Explore Freelance Services</h2>
     <div class="service-cards">
         <?php if (count($services) > 0): ?>
             <?php foreach ($services as $service): ?>
+                <?php
+                    // Determine Profile Picture Path
+                    $profilePic = !empty($service['profile_picture'])
+                        ? 'public/uploads/' . htmlspecialchars($service['profile_picture'])
+                        : 'public/uploads/default_profile.png';
+
+                    // Determine Service Image Path
+                    $serviceImage = !empty($service['media_path'])
+                        ? htmlspecialchars($service['media_path'])
+                        : null;
+
+                    // Freelancer Name
+                    $freelancerName = htmlspecialchars(($service['first_name'] ?? '') . ' ' . ($service['last_name'] ?? ''));
+                ?>
                 <div class="service-card">
-                    <?php if (!empty($service['media_path'])): ?>
-                        <img src="<?= htmlspecialchars($service['media_path']) ?>" alt="Service Image" class="service-img">
-                    <?php else: ?>
-                        <div class="placeholder-img">No Image</div>
-                    <?php endif; ?>
+                    <!-- Service Image Section -->
+                    <div class="service-img-container">
+                        <?php if ($serviceImage): ?>
+                            <img src="<?= $serviceImage ?>" alt="Service Image" class="service-img">
+                        <?php else: ?>
+                            <div class="placeholder-img">No Image</div>
+                        <?php endif; ?>
+                    </div>
 
+                    <!-- Freelancer Profile Section -->
+                    <div class="profile-section">
+                        <!-- Profile Picture -->
+                        <div class="profile-pic">
+                            <img src="<?= htmlspecialchars($profilePic) ?>" alt="Profile Picture">
+                        </div>
+
+                        <!-- Freelancer Name -->
+                        <h4 class="freelancer-name"><?= $freelancerName ?></h4>
+                    </div>
+
+                    <!-- Service Information -->
                     <div class="service-info">
-                        <h4><?= htmlspecialchars(($service['first_name'] ?? '') . ' ' . ($service['last_name'] ?? '')) ?></h4>
-
                         <p class="title"><?= htmlspecialchars($service['service_title']) ?></p>
                         <p class="desc"><?= htmlspecialchars($service['description']) ?></p>
                         <p class="category">Category: <?= htmlspecialchars($service['category']) ?></p>
@@ -156,6 +183,8 @@
         <?php endif; ?>
     </div>
 </section>
+
+
 
 
 

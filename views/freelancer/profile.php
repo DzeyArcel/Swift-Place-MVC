@@ -28,7 +28,7 @@
     <h1>Freelancer Profile</h1>
     
     <?php
-$picture = !empty($profile['profile_picture']) ? 'public/uploads/' . $profile['profile_picture'] : 'public/uploads/no-profile-picture-icon-35.png';
+$picture = !empty($profile['profile_picture']) ? 'public/uploads/' . $profile['profile_picture'] : 'public/uploads/default_profile.png';
 ?>
 <div class="profile-pic">
     <img src="<?= htmlspecialchars($picture) ?>" alt="Profile Picture">

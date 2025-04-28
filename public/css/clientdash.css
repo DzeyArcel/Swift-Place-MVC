@@ -135,39 +135,7 @@ body {
     color: white;
 }
 
-.recommendations, .browsing-history {
-    padding: 30px;
-    background: white;
-    margin: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
 
-.service-cards {
-    display: flex;
-    gap: 15px;
-    overflow-x: auto;
-    padding: 10px 0;
-}
-
-.card {
-    min-width: 200px;
-    height: 150px;
-    background: #eee;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.3s;
-}
-
-.card:hover {
-    transform: scale(1.05);
-    background: #1dbf73;
-    color: white;
-}
 
 
 /* Footer */
@@ -233,60 +201,25 @@ footer p {
 
 
 /* mao nig job ha koleray */
-.job-section {
-    padding: 40px;
-    background-color: #f9f9f9;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-.job-section h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.job-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-.job-card {
-    background: white;
-    padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease;
-}
-
-.job-card:hover {
-    transform: translateY(-5px);
-}
-
-.job-card h3 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-}
-
-.job-card p {
-    margin: 6px 0;
-    font-size: 14px;
-    color: #555;
-}
-
-.job-card .desc {
-    margin-top: 10px;
-    color: #777;
-    font-style: italic;
-}
-
+/* Recommendations Section */
 .recommendations {
     padding: 60px 20px;
-    background: #f9f9f9;
-    overflow: auto; /* Make the section scrollable if needed */
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    overflow: auto;
 }
 
-/* Grid layout for service cards */
+/* Heading */
+.recommendations h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Grid Layout for Service Cards */
 .service-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -294,62 +227,76 @@ footer p {
     padding: 30px;
 }
 
-/* Individual service card style */
+/* Individual Service Card Style */
 .card {
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%; /* Allow cards to take full height */
+    height: 100%;
 }
 
+/* Hover Effect on Service Cards */
 .card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
 }
 
-/* Image styling */
+/* Service Image Styling */
 .service-img {
     width: 100%;
     height: 220px;
     object-fit: cover;
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid #f4f4f4;
 }
 
-/* Card content styling */
+/* Card Content Styling */
 .card-content {
     padding: 20px;
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Ensure content is spaced well */
+    justify-content: space-between;
     height: 100%;
 }
 
+/* Freelancer Info */
+.freelancer-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
 .card-content h3 {
-    margin: 0 0 8px;
-    font-size: 22px;
-    font-weight: 700;
-    color: #111;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 12px;
 }
 
 .card-content p {
-    margin: 6px 0;
     font-size: 15px;
-    color: #444;
-    line-height: 1.4;
-    flex-grow: 1; /* Ensure description can grow to fit space */
+    color: #555;
+    margin: 6px 0;
 }
 
-/* Star rating display */
+/* Stars Rating */
 .stars {
     display: flex;
-    flex-direction: row-reverse;
     justify-content: flex-start;
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .stars input[type="radio"] {
@@ -357,10 +304,10 @@ footer p {
 }
 
 .stars label {
-    font-size: 18px;
+    font-size: 20px;
     color: #ccc;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: color 0.3s ease;
 }
 
 .stars input[type="radio"]:checked ~ label,
@@ -369,23 +316,34 @@ footer p {
     color: gold;
 }
 
-/* Rate button styling */
+/* Rate Button */
 .rating-form button {
-    margin-top: 12px;
-    padding: 8px 16px;
-    background: #111;
+    padding: 10px 20px;
+    background: #3498db;
     color: #fff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background-color 0.3s ease;
+    margin-top: 12px;
+    font-weight: 600;
+    font-size: 16px;
 }
 
 .rating-form button:hover {
-    background-color: #333;
+    background-color: #2980b9;
 }
 
+/* Add small adjustments for responsiveness */
+@media (max-width: 768px) {
+    .service-cards {
+        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    }
 
+    .card {
+        max-width: 100%;
+    }
+}
 /* Notification Icon */
 .notif-icon {
     position: relative;
@@ -575,4 +533,143 @@ input[type="text"] {
 .post-job-link:active {
     background-color: #660947; /* Even darker green when clicked */
     transform: scale(1); /* Return to normal size */
+}
+
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+.freelancer-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+
+.job-section {
+    padding: 60px 20px;
+    background-color: #f5f5f5;
+    font-family: 'Roboto', sans-serif; /* Premium font for body */
+}
+
+.job-section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+    margin-bottom: 40px;
+    letter-spacing: 0.5px;
+}
+
+.job-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.job-card {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.job-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.job-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.client-profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.job-info h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 5px;
+}
+
+.job-info p {
+    font-size: 16px;
+    color: #555;
+}
+
+.job-card p {
+    font-size: 16px;
+    color: #555;
+    margin: 8px 0;
+}
+
+.job-card p strong {
+    font-weight: 600;
+    color: #333;
+}
+
+.job-card .desc {
+    margin-top: 15px;
+    color: #777;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.job-card .posted-time {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+.job-card .desc {
+    flex-grow: 1;
+}
+
+@media (max-width: 768px) {
+    .job-section h2 {
+        font-size: 28px;
+    }
+
+    .job-card {
+        padding: 20px;
+    }
+}
+
+
+/* Adding premium font style to the entire page */
+
+
+h2, h3, p {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Applying smooth transitions */
+.job-card {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Adding subtle hover effect */
+.job-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
 }

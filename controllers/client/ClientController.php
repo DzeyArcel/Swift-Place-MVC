@@ -49,49 +49,51 @@ class ClientController {
         session_start();
         $max_attempts = 5;
         $lockout_time = 15 * 60;
-
+    
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $email = trim($_POST['email']);
             $password = trim($_POST['password']);
-
+    
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                echo "<script>alert('Invalid email format.'); window.location='/Swift-Place/views/auth/login.php';</script>";
+                $_SESSION['error_message'] = 'Invalid email format.';
+                header("Location: " . BASE_URL . "/views/auth/login.php");
                 exit();
             }
-
+    
             if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] >= $max_attempts) {
                 $remaining_time = $_SESSION['lockout_time'] - time();
                 if ($remaining_time > 0) {
-                    echo "<script>alert('Too many failed attempts. Try again in " . ceil($remaining_time / 60) . " minutes.'); window.location='/Swift-Place/views/auth/login.php';</script>";
+                    $_SESSION['error_message'] = 'Too many failed attempts. Try again in ' . ceil($remaining_time / 60) . ' minutes.';
+                    header("Location: " . BASE_URL . "/views/auth/login.php");
                     exit();
                 } else {
-                    unset($_SESSION['login_attempts']);
-                    unset($_SESSION['lockout_time']);
+                    unset($_SESSION['login_attempts'], $_SESSION['lockout_time']);
                 }
             }
-
+    
             $user = User::findByEmail($email);
             if ($user && password_verify($password, $user['password'])) {
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['first_name'];
                 unset($_SESSION['login_attempts'], $_SESSION['lockout_time']);
-
-                header("Location: /Swift-Place/index.php?controller=client&action=clientDashboard");
+    
+                header("Location: " . BASE_URL . "/index.php?controller=client&action=clientDashboard");
                 exit();
             } else {
                 $_SESSION['login_attempts'] = ($_SESSION['login_attempts'] ?? 0) + 1;
                 if ($_SESSION['login_attempts'] >= $max_attempts) {
                     $_SESSION['lockout_time'] = time() + $lockout_time;
                 }
-                echo "<script>alert('Invalid email or password.'); window.location='/Swift-Place/views/auth/login.php';</script>";
+                $_SESSION['error_message'] = 'Invalid email or password.';
+                header("Location: " . BASE_URL . "/views/auth/login.php");
+                exit();
             }
         } else {
             include __DIR__ . '/../../views/auth/login.php';
         }
     }
-
-    public function logout()
+        public function logout()
     {
         session_start();
         session_unset();
@@ -205,7 +207,6 @@ class ClientController {
     public function notifications() {
         session_start();
     
-        // Fix: Check for 'user_id', not 'client_id'
         if (!isset($_SESSION['user_id'])) {
             header("Location: index.php?controller=auth&action=login");
             exit();
@@ -213,25 +214,39 @@ class ClientController {
     
         $client_id = $_SESSION['user_id'];
     
-        require_once 'models/notification.php';
+    
         $model = new ClientNotification(Database::getConnection());
     
         // Mark notification as read
         if (isset($_GET['notification_id']) && is_numeric($_GET['notification_id'])) {
-            $model->markAsRead((int)$_GET['notification_id'], $client_id);
+            $notification_id = (int)$_GET['notification_id'];
+            $model->markAsRead($notification_id, $client_id);
         }
     
         // Delete notification
         if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-            $model->deleteNotification((int)$_GET['delete_id'], $client_id);
+            $delete_id = (int)$_GET['delete_id'];
+            $result = $model->deleteNotification($delete_id, $client_id);
+    
+            // Check if the delete was successful
+            if (!$result) {
+                // Optionally log or show an error message here
+                echo "❌ Error deleting notification!";
+                exit();
+            }
+    
+            // Redirect back to the notifications page after successful deletion
             header("Location: index.php?controller=client&action=notifications");
             exit();
         }
     
+        // Get all notifications for the client
         $notifications = $model->getNotificationsByUser($client_id);
     
         require 'views/client/notification.php';
     }
+    
+    
     
     public function viewApplications()
     {
@@ -250,7 +265,142 @@ class ClientController {
         require 'views/client/applications.php';
     }
     
+   // ClientController.php
 
+public function chatWithFreelancer()
+{
+    session_start();
+    if (!isset($_SESSION['client_id'])) {
+        header("Location: index.php?controller=auth&action=login");
+        exit();
+    }
+
+    if (!isset($_GET['freelancer_id'])) {
+        echo "Freelancer not specified.";
+        exit();
+    }
+
+    $client_id = $_SESSION['client_id'];
+    $freelancer_id = $_GET['freelancer_id'];
+
+    // Load messages between the client and freelancer
+    // Pass freelancer ID and client ID to the view to render the chat interface
+    require_once 'views/client/chat.php';
+}
+
+public function loadMessages()
+{
+    session_start();
+    if (!isset($_SESSION['client_id'])) {
+        echo json_encode(["error" => "User not logged in."]);
+        exit();
+    }
+
+    $client_id = $_SESSION['client_id'];
+    $freelancer_id = $_GET['freelancer_id'];
+
+    // Make sure both client_id and freelancer_id are provided
+    if (empty($client_id) || empty($freelancer_id)) {
+        echo json_encode(["error" => "Client or freelancer ID missing."]);
+        exit();
+    }
+
+    // Get messages exchanged between client and freelancer
+    $db = Database::getConnection();
+    $stmt = $db->prepare("SELECT m.*, u.first_name, u.last_name, u.profile_picture 
+                          FROM messages m
+                          JOIN users u ON m.sender_id = u.id
+                          WHERE (m.sender_id = ? AND m.receiver_id = ?) 
+                             OR (m.sender_id = ? AND m.receiver_id = ?) 
+                          ORDER BY m.sent_at ASC");
+
+    $stmt->bind_param("iiii", $client_id, $freelancer_id, $freelancer_id, $client_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $messages = [];
+    while ($row = $result->fetch_assoc()) {
+        $messages[] = $row;
+    }
+
+    echo json_encode($messages);
+    exit();
+}
+
+public function sendMessage()
+{
+    session_start();
+    if (!isset($_SESSION['client_id'])) {
+        echo json_encode(["error" => "User not logged in."]);
+        exit();
+    }
+
+    $client_id = $_SESSION['client_id'];
+    $freelancer_id = $_POST['freelancer_id'];
+    $message = $_POST['message'];
+
+    if (empty($message)) {
+        echo json_encode(["error" => "Message cannot be empty."]);
+        exit();
+    }
+
+    // Insert the message into the database
+    $db = Database::getConnection();
+    $stmt = $db->prepare("INSERT INTO messages (sender_id, receiver_id, sender_type, message, sent_at) 
+                          VALUES (?, ?, 'client', ?, NOW())");
+    $stmt->bind_param("iis", $client_id, $freelancer_id, $message);
+
+    if ($stmt->execute()) {
+        echo json_encode(["success" => "Message sent."]);
+    } else {
+        echo json_encode(["error" => "Failed to send message."]);
+    }
+
+    exit();
+}
+
+// ClientController.php
+
+public function messageFreelancer()
+{
+    session_start();
+
+    if (!isset($_SESSION['client_id'])) {
+        header("Location: index.php?controller=client&action=login");
+        exit();
+    }
+
+    if (!isset($_GET['freelancer_id'])) {
+        echo "Freelancer ID not provided.";
+        exit();
+    }
+
+    $client_id = $_SESSION['client_id'];
+    $freelancer_id = $_GET['freelancer_id'];
+
+    // Fetch existing messages between the client and freelancer
+    $db = Database::getConnection();
+    $stmt = $db->prepare("SELECT m.*, u.first_name, u.last_name, u.profile_picture 
+                          FROM messages m
+                          JOIN users u ON m.sender_id = u.id
+                          WHERE (m.sender_id = ? AND m.receiver_id = ?) 
+                             OR (m.sender_id = ? AND m.receiver_id = ?) 
+                          ORDER BY m.sent_at ASC");
+    $stmt->bind_param("iiii", $client_id, $freelancer_id, $freelancer_id, $client_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $messages = [];
+    while ($row = $result->fetch_assoc()) {
+        $messages[] = $row;
+    }
+
+    // Pass messages and freelancer info to the view
+    require_once 'views/client/chat_with_freelancer.php';
+}
+
+    
+    
     
 
     

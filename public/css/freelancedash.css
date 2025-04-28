@@ -331,157 +331,175 @@ footer p {
 /* service  ni siya*/
 
 .service-listings {
-    padding: 30px;
-    background: #fff;
+    padding: 40px 30px;
+    background: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .service-listings h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #333;
+    text-align: center;
 }
 
 .service-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
+    justify-items: center;
 }
 
 .service-card {
-    background: #f9f9f9;
-    border-radius: 12px;
+    background: #fff;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 330px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .service-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.service-img-container {
+    width: 100%;
+    height: 220px;
+    position: relative;
 }
 
 .service-img {
     width: 100%;
-    height: 180px;
+    height: 100%;
     object-fit: cover;
+    border-radius: 8px 8px 0 0;
 }
 
 .placeholder-img {
     width: 100%;
-    height: 180px;
-    background: #ddd;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #888;
+    background-color: #f0f0f0;
+    color: #aaa;
     font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px 8px 0 0;
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: #fafafa;
+}
+
+.profile-pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 12px;
+    overflow: hidden;
+    border: 2px solid #fff;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.freelancer-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
 }
 
 .service-info {
-    padding: 15px;
-}
-
-.service-info h4 {
-    margin: 0;
-    font-weight: bold;
-    font-size: 16px;
+    padding: 15px 20px;
+    background: #fff;
 }
 
 .service-info .title {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
-    margin-top: 5px;
     color: #333;
+    margin: 10px 0;
 }
 
 .service-info .desc {
-    font-size: 13px;
+    font-size: 14px;
     color: #666;
-    margin-top: 5px;
-    height: 40px;
+    margin-bottom: 12px;
+    height: 60px;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.6;
 }
 
-.service-info .rating {
-    margin-top: 8px;
-    color: #f59e0b;
+.service-info .category, .service-info .skills, .service-info .expertise {
     font-size: 13px;
+    color: #888;
+    font-style: italic;
+    margin: 5px 0;
+}
+
+.service-info .posted-time {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.service-info .tags {
+    font-size: 12px;
+    color: #007BFF;
+    font-weight: 500;
+    text-transform: capitalize;
+    margin-top: 10px;
+}
+
+.service-info .tags:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .service-info .price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f59e0b;
+    margin-top: 10px;
+}
+
+.service-info .rating {
+    font-size: 13px;
+    color: #f39c12;
     margin-top: 8px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.service-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.service-card {
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-}
-
-.service-img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.placeholder-img {
-    width: 100%;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f4f4f4;
-    color: #888;
-    font-size: 14px;
-    border-radius: 8px;
-}
-
-.service-info {
-    padding-top: 10px;
-}
-
-.service-info h4 {
-    font-size: 1.2rem;
     font-weight: 600;
 }
 
-.service-info p {
-    margin: 8px 0;
+.service-info .rating::before {
+    content: '★ ';
 }
 
-.price {
-    font-weight: 500;
-}
+@media (max-width: 768px) {
+    .service-cards {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
 
-.rating {
-    color: #f39c12;
-}
-
-.expertise, .delivery-time, .tags {
-    font-style: italic;
-    color: #555;
-    margin-top: 5px;
-}
-
-.tags {
-    color: #007BFF; /* Blue color for tags */
-    font-size: 0.9rem;
-}
-
-.tags:hover {
-    text-decoration: underline;
-    cursor: pointer;
+    .service-card {
+        max-width: 100%;
+    }
 }
 
 /* Styling for the navbar links */
@@ -600,4 +618,20 @@ footer p {
 /* Active effect for the link (when clicked) */
 .post-service-link:active {
     transform: translateY(1px);  /* Button appears to be pressed */
+}
+
+.freelancer-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.freelancer-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    background-color: #f8f8f8;
 }

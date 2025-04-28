@@ -1,0 +1,46 @@
+#chat-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.sent, .received {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+}
+
+.sent {
+    background-color: #e1f5fe;
+    text-align: right;
+}
+
+.received {
+    background-color: #f1f1f1;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: gray;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+button#send-btn {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button#send-btn:hover {
+    background-color: #45a049;
+}

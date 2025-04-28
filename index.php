@@ -42,6 +42,11 @@ switch ($controller) {
         $className = 'AuthController';
         break;
 
+    case 'application': // Added case for ApplicationController
+        $controllerFile = $controllerDir . 'client/ApplicationController.php';
+        $className = 'ApplicationController';
+        break;
+
     case 'home':
         require_once 'views/home/homepage.php';
         exit();

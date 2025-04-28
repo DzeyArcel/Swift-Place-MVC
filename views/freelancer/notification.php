@@ -24,26 +24,30 @@
     </header>
 
     <section class="notifications">
-        <h2>All Notifications</h2>
-        <?php if (!empty($notifications)) { ?>
-            <ul>
-                <?php foreach ($notifications as $notif) { ?>
-                    <li class="notification-item <?= $notif['is_read'] == 0 ? 'unread' : '' ?>">
-                        <div class="notification-content">
-                            <a href="/index.php?controller=freelancer&action=markNotification&notification_id=<?= $notif['id'] ?>">
-                                <?= htmlspecialchars($notif['message']) ?>
-                            </a>
-                            <span class="timestamp"><?= htmlspecialchars($notif['created_at']) ?></span>
-                        </div>
-                        <a href="/index.php?controller=freelancer&action=deleteNotification&notification_id=<?= $notif['id'] ?>" 
-                           class="delete-notification"
-                           onclick="return confirm('Are you sure you want to delete this notification?')">Delete</a>
-                    </li>
-                <?php } ?>
-            </ul>
-        <?php } else { ?>
-            <p>No notifications yet.</p>
-        <?php } ?>
-    </section>
+    <h2>All Notifications</h2>
+    <?php if (!empty($notifications)) { ?>
+        <ul>
+            <?php foreach ($notifications as $notif) { ?>
+                <li class="notification-item <?= $notif['is_read'] == 0 ? 'unread' : '' ?>">
+                    <div class="notification-content">
+                        <a href="/index.php?controller=freelancer&action=markNotification&notification_id=<?= $notif['id'] ?>">
+                            <?= htmlspecialchars($notif['message']) ?>
+                        </a>
+                        <span class="timestamp"><?= htmlspecialchars($notif['created_at']) ?></span>
+                    </div>
+
+                    <!-- Delete Notification Link -->
+                    <a href="index.php?controller=freelancer&action=notifications&delete_id=<?= $notif['id'] ?>" 
+   class="delete-notification" 
+   onclick="return confirm('Are you sure you want to delete this notification?')">Delete</a>
+
+                </li>
+            <?php } ?>
+        </ul>
+    <?php } else { ?>
+        <p>No notifications yet.</p>
+    <?php } ?>
+</section>
+
 </body>
 </html>

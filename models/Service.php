@@ -9,10 +9,15 @@ class Service {
     
         // Join with freelancers table to get first_name and last_name
         $query = "
-            SELECT services.*, freelancers.first_name, freelancers.last_name
-            FROM services
-            JOIN freelancers ON services.freelancer_id = freelancers.id
-        ";
+        SELECT services.*, 
+               freelancers.first_name, 
+               freelancers.last_name, 
+               freelancer_profile.profile_picture
+        FROM services
+        JOIN freelancers ON services.freelancer_id = freelancers.id
+        LEFT JOIN freelancer_profile ON freelancer_profile.freelancer_id = freelancers.id
+    ";
+    
     
         $stmt = $conn->prepare($query);
     
