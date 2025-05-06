@@ -30,12 +30,16 @@ if (!isset($_SESSION['user_id'])) {
         <input type="text" placeholder="Search for services..." class="search-bar">
 
         <nav class="nav-links">
-            <a href="index.php?controller=client&action=viewApplications">Applications</a>
-            <a href="index.php?controller=job&action=myJobs">Posted Jobs</a>
-            <a href="index.php?controller=client&action=profile">Profile</a>
-            <a href="index.php?controller=client&action=logout" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
+        <a href="index.php?controller=client&action=Clientdashboard">Dashboard</a>
+        <a href="index.php?controller=client&action=viewApplications">Applications</a>
+        <a href="index.php?controller=job&action=myJobs" class="active">Your Jobs</a>
+        <a href="index.php?controller=client&action=profile">Profile</a>
+        <!-- Add this Job Tracking link -->
+   
+        <a href="index.php?controller=client&action=logout" class="logout">Logout</a>
+
+
+
 
             <!-- Notification Icon -->
             <div class="notification-icon" id="notification-icon">

@@ -1,16 +1,15 @@
 <?php
 date_default_timezone_set('Asia/Manila');
-
-define('BASE_URL', '/Swift-Place'); // Change if your project folder has a different name
+define('BASE_URL', '/Swift-Place'); // Adjust if your folder name is different
 
 $controller = $_GET['controller'] ?? 'home';
 $action = $_GET['action'] ?? 'index';
 
 $controllerDir = __DIR__ . '/controllers/';
-$className = '';
 $controllerFile = '';
+$className = '';
 
-// Routing logic
+// Basic Routing
 switch ($controller) {
     case 'freelancer':
         $controllerFile = $controllerDir . 'freelancer/FreelancerController.php';
@@ -32,6 +31,11 @@ switch ($controller) {
         $className = 'JobController';
         break;
 
+    case 'application':
+        $controllerFile = $controllerDir . 'client/ApplicationController.php';
+        $className = 'ApplicationController';
+        break;
+
     case 'service':
         $controllerFile = $controllerDir . 'freelancer/ServiceController.php';
         $className = 'ServiceController';
@@ -42,14 +46,15 @@ switch ($controller) {
         $className = 'AuthController';
         break;
 
-    case 'application': // Added case for ApplicationController
-        $controllerFile = $controllerDir . 'client/ApplicationController.php';
-        $className = 'ApplicationController';
-        break;
-
     case 'home':
         require_once 'views/home/homepage.php';
         exit();
+
+        case 'jobtracking':  // Correct CamelCase to match URL
+            $controllerFile = $controllerDir . 'client/JobTrackingController.php';
+            $className = 'JobTrackingController';
+            break;
+    
 
     default:
         echo "❌ Unknown controller '$controller'.<br>";
@@ -57,7 +62,7 @@ switch ($controller) {
         exit();
 }
 
-// Load controller file
+// Load Controller
 if (file_exists($controllerFile)) {
     require_once $controllerFile;
 
@@ -65,17 +70,20 @@ if (file_exists($controllerFile)) {
         $controllerInstance = new $className();
 
         if (method_exists($controllerInstance, $action)) {
+            // Optional: Log which controller and action are being called
+            error_log("Routing to $className->$action()");
+
+            // Execute the action
             $controllerInstance->$action();
-            exit();
         } else {
             echo "❌ Method '$action' not found in controller '$className'.<br>";
             echo "<a href='" . BASE_URL . "/index.php'>Go to Home</a>";
         }
     } else {
-        echo "❌ Class '$className' not found in $controllerFile.<br>";
+        echo "❌ Class '$className' not found in '$controllerFile'.<br>";
         echo "<a href='" . BASE_URL . "/index.php'>Go to Home</a>";
     }
 } else {
-    echo "❌ Controller file not found: $controllerFile<br>";
+    echo "❌ Controller file not found: '$controllerFile'.<br>";
     echo "<a href='" . BASE_URL . "/index.php'>Go to Home</a>";
 }

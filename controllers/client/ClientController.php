@@ -124,19 +124,26 @@ class ClientController {
         }
     
         $client_name = $client['first_name'] ?? 'Client';
-        
+    
         // Fetch data
         Job::deleteExpiredJobs();
         $jobs = Job::getAllJobs();
         $services = Service::getAllServices();
+    
+        // Fetch accepted job for the client
+        $applicationModel = new Application(Database::getConnection());
+        $acceptedJob = $applicationModel->getAcceptedFreelancerByJobId($client_id); // Assuming this method fetches the accepted job for the client
+        $jobId = $acceptedJob ? $acceptedJob['job_id'] : null; // Get the job ID of the accepted application
     
         // Notifications
         $clientNotif = new ClientNotification($conn);
         $notifications = $clientNotif->getNotificationsByUser($client_id);
         $unread_notifications = $clientNotif->getUnreadCount($client_id); // simplified
     
+        // Pass the jobId to the view
         include __DIR__ . '/../../views/client/dashboard.php';
     }
+    
     
     
 
@@ -248,158 +255,160 @@ class ClientController {
     
     
     
-    public function viewApplications()
-    {
-        session_start(); // make sure this is only called once, and not conflicting
+    public function viewApplications() {
+        session_start();
     
+        // Check if the user is logged in
         if (!isset($_SESSION['user_id'])) {
-            // Redirects to login if session isn't set
-            header("Location: index.php?controller=client&action=login");
+            header("Location: index.php?controller=auth&action=login");
             exit();
         }
     
-        $clientId = $_SESSION['user_id'];
-        $applicationModel = new Application(Database::getConnection());
-        $applications = $applicationModel->getApplicationsByClient($clientId);
+        $db = Database::getConnection();
+        
+        // Fetch all applications for the client with their status
+        $stmt = $db->prepare("SELECT a.id, a.status, a.cover_letter, a.experience_summary, a.skills_used, a.questions_clarifications, a.availability, a.attachment, j.id AS job_id, j.job_title, CONCAT(f.first_name, ' ', f.last_name) AS freelancer_name, f.id AS freelancer_id
+                              FROM job_applications a
+                              JOIN jobs j ON a.job_id = j.id
+                              JOIN freelancers f ON a.freelancer_id = f.id
+                              WHERE j.client_id = ? ORDER BY a.status DESC");
+        $stmt->bind_param("i", $_SESSION['user_id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
     
-        require 'views/client/applications.php';
+        $applications = [];
+        while ($row = $result->fetch_assoc()) {
+            $applications[] = $row;
+        }
+        $stmt->close();
+    
+        // Separate pending and accepted applications
+        $pendingApplications = array_filter($applications, function($app) {
+            return $app['status'] == 'pending';
+        });
+        
+        $acceptedApplications = array_filter($applications, function($app) {
+            return $app['status'] == 'accepted';
+        });
+    
+        // Pass the applications to the view
+        require_once 'views/client/applications.php';
     }
     
-   // ClientController.php
+    
+    
+    
+    public function viewJob()
+    {
+        // Check if the client is logged in
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?controller=auth&action=login");
+            exit();
+        }
+    
+        // Get job_id from the URL parameters
+        if (!isset($_GET['job_id']) || !is_numeric($_GET['job_id'])) {
+            header("Location: index.php?controller=client&action=viewJobs&error=invalid_job");
+            exit();
+        }
+    
+        $jobId = $_GET['job_id'];
+        $db = Database::getConnection();
+    
+        // Fetch the job details from the database
+        $stmt = $db->prepare("SELECT j.title, j.description, j.status, f.first_name AS freelancer_first_name, f.last_name AS freelancer_last_name, fp.profile_picture AS freelancer_profile_picture
+                              FROM jobs j
+                              JOIN freelancers f ON j.freelancer_id = f.id
+                              LEFT JOIN freelancer_profile fp ON f.id = fp.freelancer_id
+                              WHERE j.id = ?");
+        if ($stmt) {
+            $stmt->bind_param("i", $jobId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $jobDetails = $result->fetch_assoc();
+            $stmt->close();
+        } else {
+            error_log("Failed to fetch job details: " . $db->error);
+            header("Location: index.php?controller=client&action=viewJobs&error=db_error");
+            exit();
+        }
+    
+        // Load the job details view
+        include 'views/client/job_details.php';
+    }
+    
 
-public function chatWithFreelancer()
+    
+    public function updateJobStatus()
+    {
+        session_start();
+    
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?controller=auth&action=login");
+            exit();
+        }
+    
+        if (!isset($_POST['job_id']) || !isset($_POST['status'])) {
+            header("Location: index.php?controller=client&action=viewJob&error=invalid_input");
+            exit();
+        }
+    
+        $jobId = $_POST['job_id'];
+        $status = $_POST['status'];
+        $db = Database::getConnection();
+    
+        // Update job status
+        $stmt = $db->prepare("UPDATE jobs SET status = ? WHERE id = ?");
+        if ($stmt) {
+            $stmt->bind_param("si", $status, $jobId);
+            $stmt->execute();
+            $stmt->close();
+            header("Location: index.php?controller=client&action=viewJob&job_id=$jobId&success=status_updated");
+            exit();
+        } else {
+            error_log("Failed to update job status: " . $db->error);
+            header("Location: index.php?controller=client&action=viewJob&job_id=$jobId&error=db_error");
+            exit();
+        }
+    }
+    
+
+    public function sendMessage()
 {
     session_start();
-    if (!isset($_SESSION['client_id'])) {
+    if (!isset($_SESSION['user_id'])) {
         header("Location: index.php?controller=auth&action=login");
         exit();
     }
 
-    if (!isset($_GET['freelancer_id'])) {
-        echo "Freelancer not specified.";
+    // Get data from the form
+    if (!isset($_POST['message']) || empty($_POST['message']) || !isset($_POST['job_id'])) {
+        header("Location: index.php?controller=client&action=viewJob&job_id=" . $_POST['job_id'] . "&error=message_empty");
         exit();
     }
 
-    $client_id = $_SESSION['client_id'];
-    $freelancer_id = $_GET['freelancer_id'];
-
-    // Load messages between the client and freelancer
-    // Pass freelancer ID and client ID to the view to render the chat interface
-    require_once 'views/client/chat.php';
-}
-
-public function loadMessages()
-{
-    session_start();
-    if (!isset($_SESSION['client_id'])) {
-        echo json_encode(["error" => "User not logged in."]);
-        exit();
-    }
-
-    $client_id = $_SESSION['client_id'];
-    $freelancer_id = $_GET['freelancer_id'];
-
-    // Make sure both client_id and freelancer_id are provided
-    if (empty($client_id) || empty($freelancer_id)) {
-        echo json_encode(["error" => "Client or freelancer ID missing."]);
-        exit();
-    }
-
-    // Get messages exchanged between client and freelancer
-    $db = Database::getConnection();
-    $stmt = $db->prepare("SELECT m.*, u.first_name, u.last_name, u.profile_picture 
-                          FROM messages m
-                          JOIN users u ON m.sender_id = u.id
-                          WHERE (m.sender_id = ? AND m.receiver_id = ?) 
-                             OR (m.sender_id = ? AND m.receiver_id = ?) 
-                          ORDER BY m.sent_at ASC");
-
-    $stmt->bind_param("iiii", $client_id, $freelancer_id, $freelancer_id, $client_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $messages = [];
-    while ($row = $result->fetch_assoc()) {
-        $messages[] = $row;
-    }
-
-    echo json_encode($messages);
-    exit();
-}
-
-public function sendMessage()
-{
-    session_start();
-    if (!isset($_SESSION['client_id'])) {
-        echo json_encode(["error" => "User not logged in."]);
-        exit();
-    }
-
-    $client_id = $_SESSION['client_id'];
-    $freelancer_id = $_POST['freelancer_id'];
     $message = $_POST['message'];
+    $jobId = $_POST['job_id'];
+    $userId = $_SESSION['user_id']; // Assuming the session stores the logged-in client's ID
 
-    if (empty($message)) {
-        echo json_encode(["error" => "Message cannot be empty."]);
-        exit();
-    }
-
-    // Insert the message into the database
     $db = Database::getConnection();
-    $stmt = $db->prepare("INSERT INTO messages (sender_id, receiver_id, sender_type, message, sent_at) 
-                          VALUES (?, ?, 'client', ?, NOW())");
-    $stmt->bind_param("iis", $client_id, $freelancer_id, $message);
 
-    if ($stmt->execute()) {
-        echo json_encode(["success" => "Message sent."]);
+    // Store the message in the database (you may create a separate table for messages)
+    $stmt = $db->prepare("INSERT INTO messages (job_id, user_id, message, created_at) VALUES (?, ?, ?, NOW())");
+    if ($stmt) {
+        $stmt->bind_param("iis", $jobId, $userId, $message);
+        $stmt->execute();
+        $stmt->close();
+        header("Location: index.php?controller=client&action=viewJob&job_id=$jobId&success=message_sent");
+        exit();
     } else {
-        echo json_encode(["error" => "Failed to send message."]);
-    }
-
-    exit();
-}
-
-// ClientController.php
-
-public function messageFreelancer()
-{
-    session_start();
-
-    if (!isset($_SESSION['client_id'])) {
-        header("Location: index.php?controller=client&action=login");
+        error_log("Failed to send message: " . $db->error);
+        header("Location: index.php?controller=client&action=viewJob&job_id=$jobId&error=db_error");
         exit();
     }
-
-    if (!isset($_GET['freelancer_id'])) {
-        echo "Freelancer ID not provided.";
-        exit();
-    }
-
-    $client_id = $_SESSION['client_id'];
-    $freelancer_id = $_GET['freelancer_id'];
-
-    // Fetch existing messages between the client and freelancer
-    $db = Database::getConnection();
-    $stmt = $db->prepare("SELECT m.*, u.first_name, u.last_name, u.profile_picture 
-                          FROM messages m
-                          JOIN users u ON m.sender_id = u.id
-                          WHERE (m.sender_id = ? AND m.receiver_id = ?) 
-                             OR (m.sender_id = ? AND m.receiver_id = ?) 
-                          ORDER BY m.sent_at ASC");
-    $stmt->bind_param("iiii", $client_id, $freelancer_id, $freelancer_id, $client_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $messages = [];
-    while ($row = $result->fetch_assoc()) {
-        $messages[] = $row;
-    }
-
-    // Pass messages and freelancer info to the view
-    require_once 'views/client/chat_with_freelancer.php';
 }
 
-    
     
     
 

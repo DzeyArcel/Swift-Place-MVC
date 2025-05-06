@@ -104,8 +104,7 @@ public function submitApplication()
             // 3. Create a custom notification message
             $notificationText = "$freelancerName applied for your job \"$jobTitle\".";
 
-            
-         // 4. Insert into client_notifications
+        
 // 4. Insert into notifications (for client)
 $stmt = $db->prepare("INSERT INTO notifications (user_id, type, message, is_read, created_at) VALUES (?, 'client', ?, 0, NOW())");
 if (!$stmt) {

@@ -37,7 +37,7 @@ $picture = !empty($profile['profile_picture']) ? 'public/uploads/' . $profile['p
 
     <h2><?= htmlspecialchars($basicInfo['first_name'] . ' ' . $basicInfo['last_name']) ?></h2>
     <p><?= htmlspecialchars($basicInfo['email']) ?></p>
-    <p><strong>Category:</strong> <?= htmlspecialchars($basicInfo['job_category']) ?></p>
+    <p><strong>Category:</strong> <?= htmlspecialchars($basicInfo['job_category'] ?? 'Not set') ?></p>
     <p><strong>Phone:</strong> <?= htmlspecialchars($profile['phone'] ?? 'Not set') ?></p>
     <p><strong>Address:</strong> <?= htmlspecialchars($profile['address'] ?? 'Not set') ?></p>
     <p><strong>Skills:</strong> <?= htmlspecialchars($profile['skills'] ?? 'Not set') ?></p>

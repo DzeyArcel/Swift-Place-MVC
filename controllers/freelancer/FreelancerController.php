@@ -4,6 +4,10 @@ require_once 'config/db.php';
 require_once 'models/Notification.php';
 require_once 'models/Job.php';
 require_once 'models/Service.php';
+require_once 'models/Application.php';  
+require_once 'models/Milestone.php';
+
+
 
 class FreelancerController {
 
@@ -120,7 +124,8 @@ public function logout()
     exit();
 }
 
-public function dashboard() {
+public function dashboard()
+{
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
@@ -135,18 +140,19 @@ public function dashboard() {
     $freelancer_id = $_SESSION['freelancer_id'];
     $freelancer_name = $_SESSION['freelancer_name'] ?? "Freelancer";
 
-    // Use Notification as object
+    // Notification model
     $notificationModel = new FreelancerNotification($conn);
     $unread_notifications = $notificationModel->getUnreadCount($freelancer_id);
     $notifications = $notificationModel->getNotificationsByUser($freelancer_id);
 
-    // Other models
+    // Jobs and Services
     $jobs = Job::getAllJobs();
     $services = Service::getAllServices();
 
-    // View
+    // Load view
     require_once 'views/freelancer/dashboard.php';
 }
+
 
 
     //Servicess
@@ -174,6 +180,45 @@ public function dashboard() {
         require 'views/freelancer/my_services.php';
     }
     
+
+    public function viewProfile()
+    {
+        if (isset($_GET['freelancer_id'])) {
+            $freelancer_id = $_GET['freelancer_id'];
+    
+            // Load model
+            require_once 'models/FreelancerProfile.php';
+            $model = new FreelancerProfile(Database::getConnection());
+    
+            // Fetch the freelancer's basic info and profile details
+            $basicInfo = $model->getFreelancerBasicInfo($freelancer_id);
+            $profile = $model->getProfile($freelancer_id);
+    
+            // Just include the view directly
+            include 'views/freelancer/profile_popup.php';
+        } else {
+            echo "Freelancer not found.";
+        }
+    }
+    
+
+    public function getProfile($freelancer_id)
+    {
+        // Modify this query to include address, experience, phone, and skills
+        $sql = "SELECT freelancer_profile.*, freelancers.address, freelancers.phone, freelancers.experience, freelancers.skills
+                FROM freelancer_profile
+                JOIN freelancers ON freelancer_profile.freelancer_id = freelancers.id
+                WHERE freelancer_profile.freelancer_id = :freelancer_id";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':freelancer_id', $freelancer_id);
+        $stmt->execute();
+
+        $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $profile;
+    }
+
+
     public function profile() {
         session_start();
     
@@ -281,5 +326,127 @@ public function dashboard() {
         require 'views/freelancer/notification.php';
     }
     
+   
+    public function viewJobTracking() {
+        // Start the session
+        session_start();
     
+        // Ensure freelancer is logged in
+        $freelancerId = $_SESSION['freelancer_id'] ?? null;
+    
+        // Debugging: Check if freelancer ID exists in session
+        if (!$freelancerId) {
+            echo "You must be logged in as a freelancer to view job tracking.";
+            return;
+        }
+    
+        // Fetch all accepted jobs for the freelancer
+        $jobs = Job::getJobsForFreelancer($freelancerId);
+    
+        if (empty($jobs)) {
+            echo "No accepted jobs found.";
+            return;
+        }
+    
+        // For each job, fetch associated milestones
+        $jobsData = [];
+        foreach ($jobs as $job) {
+            $milestones = Milestone::getByJobId($job['id']); // Get milestones for each job
+            $job['milestones'] = $milestones; // Add milestones to job
+            $jobsData[] = $job;  // Add the job with its milestones to jobsData array
+        }
+    
+        // Handle form submission for adding a milestone
+        $error = '';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title = $_POST['title'] ?? '';
+            $description = $_POST['description'] ?? ''; // Get description from form
+            $amount = $_POST['amount'] ?? null;
+            $dueDate = $_POST['due_date'] ?? '';
+            $jobId = $_POST['job_id'] ?? null;  // Get job ID from form
+    
+            if ($title && $dueDate && $jobId) {
+                // Create milestone for a specific job
+                Milestone::create($jobId, $title, $description, $amount, $dueDate);
+                header("Location: index.php?controller=freelancer&action=viewJobTracking");
+                exit;
+            } else {
+                $error = "Title, due date, and job ID are required.";
+            }
+        }
+    
+        // Pass the data to the view, including the error message if present
+        include 'views/freelancer/job_tracking.php';
+    }
+    
+    
+    
+    
+    
+
+    public function updateMilestone() {
+        if (!isset($_SESSION['freelancer_id'])) {
+            // Redirect to login if freelancer is not logged in
+            header('Location: login.php');
+            exit;
+        }
+
+        $freelancerId = $_SESSION['freelancer_id'];
+        $jobsData = Job::getJobsForFreelancer($freelancerId);
+
+        $jobId = $_GET['job_id'];
+        $milestoneId = $_GET['milestone_id'] ?? null;
+
+        // Fetch job details to ensure this freelancer is working on the job
+        $job = Job::getJobById($jobId);
+        if ($job['freelancer_id'] !== $freelancerId) {
+            // Redirect if freelancer is not associated with the job
+            header('Location: /freelancer/dashboard');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $milestoneTitle = $_POST['milestone_title'];
+            $milestoneDescription = $_POST['description']; // Get description from form
+            $milestoneStatus = $_POST['status'];
+            $milestoneDueDate = $_POST['due_date'];
+
+            if ($milestoneId) {
+                // Update existing milestone
+                Milestone::update($milestoneId, $milestoneTitle, $milestoneDescription, $milestoneStatus, $milestoneDueDate);
+            } else {
+                // Create new milestone
+                Milestone::create($jobId, $freelancerId, $milestoneTitle, $milestoneDescription, $milestoneStatus, $milestoneDueDate);
+            }
+
+            // Redirect back to job tracking page
+            header("Location: index.php?controller=freelancer&action=viewJobTracking&job_id=$jobId");
+            exit;
+        }
+
+        // Fetch job and milestones to pass to the view
+        $milestones = Milestone::getMilestonesByJobId($jobId);
+        require_once('views/freelancer/job_tracking.php');
+    }
+
+    public function submitProject() {
+        $jobId = $_GET['job_id'];
+        $freelancerId = $_SESSION['freelancer_id'];
+    
+        // Ensure this freelancer is the one handling the job
+        $job = Job::getJobById($jobId);
+        if ($job['freelancer_id'] !== $freelancerId) {
+            header('Location: /freelancer/dashboard');
+            exit;
+        }
+    
+        // Update job status to "submitted"
+        Job::updateStatus($jobId, 'submitted');
+    
+        // Redirect back to job tracking page
+        header("Location: index.php?controller=freelancer&action=viewJobTracking&job_id=$jobId");
+        exit;
+    }
+    
+
 }

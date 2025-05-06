@@ -8,32 +8,48 @@
     <link rel="stylesheet" href="/Swift-Place/public/css/freelancedash.css">
 </head>
 <body>
-    <header>
-        <div class="navbar">
-            <div class="logo-container">
-                <img src="/Swift-Place/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
-            </div>
-            <input type="text" placeholder="Search for services...">
-            <nav>
+<?php
+// Fetch accepted application for the logged-in freelancer
+$application = null;
+if (isset($_SESSION['freelancer_id'])) {
+    require_once 'models/Application.php'; // Make sure this path is correct based on your structure
+    $application = Application::getAcceptedApplicationByFreelancerId($_SESSION['freelancer_id']);
+}
+?>
+
+<header>
+    <div class="navbar">
+        <div class="logo-container">
+            <img src="/Swift-Place/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
+        </div>
+        <input type="text" placeholder="Search for services...">
+        <nav>
             <a href="index.php?controller=freelancer&action=myServices">Your Posted Services</a>
 
-            <li><a href="index.php?controller=freelancer&action=profile"><i class="fas fa-user"></i> Profile</a></li>
+            <?php if (isset($application['id'])): ?>
+                <!-- Job Tracking Link is shown only if freelancer has an application -->
+                <a href="index.php?controller=freelancer&action=viewJobTracking&application_id=<?= $application['id'] ?>">Job Tracking</a>
+            <?php else: ?>
+                <!-- Display message if no application exists -->
+                <span>Job Tracking (No application)</span>
+            <?php endif; ?>
 
+            <a href="index.php?controller=freelancer&action=profile"><i class="fas fa-user"></i> Profile</a>
+            <a href="index.php?controller=freelancer&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
 
-                <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-
-                <!-- Notification icon with modal -->
-                <div class="notification-icon" id="notification-icon">
-                    <a href="javascript:void(0)" onclick="openNotificationModal()">
-                        <i class="fa fa-bell"></i>
-                        <?php if ($unread_notifications > 0) { ?>
-                            <span class="notification-count"><?php echo $unread_notifications; ?></span>
-                        <?php } ?>
-                    </a>
-                </div>
-            </nav>
+        <!-- Notification icon with modal -->
+        <div class="notification-icon" id="notification-icon">
+            <a href="javascript:void(0)" onclick="openNotificationModal()">
+                <i class="fa fa-bell"></i>
+                <?php if (isset($unread_notifications) && $unread_notifications > 0): ?>
+                    <span class="notification-count"><?php echo $unread_notifications; ?></span>
+                <?php endif; ?>
+            </a>
         </div>
-    </header>
+    </div>
+</header>
+
 
   
     <!-- Notification Modal -->

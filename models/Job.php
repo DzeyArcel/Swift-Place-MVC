@@ -185,7 +185,8 @@ public static function findById($jobId) {
     return false;
 }
 
-public function getJobById($job_id) {
+// In Job model
+public static function getJobById($job_id) {
     $conn = Database::getConnection();
     $stmt = $conn->prepare("SELECT * FROM jobs WHERE id = ?");
     $stmt->bind_param("i", $job_id);
@@ -196,6 +197,109 @@ public function getJobById($job_id) {
     return $job;
 }
 
+
+
+public static function markAsInProgress($jobId, $freelancerId)
+{
+    $db = Database::getConnection();
+    $stmt = $db->prepare("UPDATE jobs SET status = 'in_progress', assigned_to = ? WHERE id = ?");
+    return $stmt->execute([$freelancerId, $jobId]);
+}
+public static function getMilestones($jobId)
+    {
+        $db = Database::getConnection();
+        $stmt = $db->prepare("SELECT id, title, status, due_date FROM job_milestones WHERE job_id = ?");
+        $stmt->bind_param("i", $jobId);
+        $stmt->execute();
+        $milestones = [];
+        $stmt->bind_result($milestoneId, $milestoneTitle, $milestoneStatus, $milestoneDueDate);
+        while ($stmt->fetch()) {
+            $milestones[] = [
+                'id' => $milestoneId,
+                'title' => $milestoneTitle,
+                'status' => $milestoneStatus,
+                'due_date' => $milestoneDueDate
+            ];
+        }
+        $stmt->close();
+        return $milestones;
+    }
+
+    public static function getJobWithClient($jobId) {
+        // Assuming the database connection is available
+        $db = Database::getConnection();
+    
+        // Prepare the SQL query to get the job details and associated client
+        $sql = "
+            SELECT j.*, u.first_name, u.last_name, job_description
+            FROM jobs j
+            JOIN users u ON j.client_id = u.id
+            WHERE j.id = ?
+        ";
+    
+        $stmt = $db->prepare($sql);
+    
+        // Check for errors in the prepare statement
+        if ($stmt === false) {
+            die('MySQL prepare error: ' . $db->error);
+        }
+    
+        // Bind the job ID to the prepared statement
+        $stmt->bind_param("i", $jobId);  // "i" means the parameter is an integer
+    
+        // Execute the statement
+        if (!$stmt->execute()) {
+            die('Execute error: ' . $stmt->error);
+        }
+    
+        // Get the result
+        $result = $stmt->get_result();
+    
+        // Check if any rows were returned
+        if ($result->num_rows > 0) {
+            // Fetch the row as an associative array
+            return $result->fetch_assoc();
+        } else {
+            return null; // No job found
+        }
+    }
+    
+    
+    public static function getJobsForFreelancer($freelancerId) {
+        $db = Database::getConnection();
+
+        if (!$db) {
+            die('Failed to establish a database connection.');
+        }
+
+        $sql = "SELECT j.*, u.first_name, u.last_name, a.freelancer_id
+        FROM jobs j
+        JOIN users u ON j.client_id = u.id
+        JOIN job_applications a ON a.job_id = j.id
+        WHERE a.freelancer_id = ? AND a.status = 'accepted'";
+
+        $stmt = $db->prepare($sql);
+        if (!$stmt) {
+            die('Prepare failed: ' . $db->error);
+        }
+
+        $stmt->bind_param("i", $freelancerId);
+
+        if (!$stmt->execute()) {
+            die('Execute failed: ' . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+    
+    
+    
+
+    
+
+    
+    
 }
 
 

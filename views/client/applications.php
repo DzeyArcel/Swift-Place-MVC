@@ -23,66 +23,140 @@
 </header>
 
 <main class="container">
-    <h2 class="section-title">Applications for Your Jobs</h2>
+    <div class="container">
+        <h2 class="section-title">Applications for Your Jobs</h2>
 
-    <?php if (count($applications) > 0): ?>
-        <div class="card-grid">
-            <?php foreach ($applications as $app): ?>
-                <div class="app-card">
-                    <h3><?= htmlspecialchars($app['freelancer_name']) ?> applied to 
-                        <span class="job-title">"<?= htmlspecialchars($app['job_title']) ?>"</span>
-                    </h3>
+        <div class="content-wrapper">
+            <!-- Pending Applications -->
+            <div class="applications-list">
+            <h3>Pending Applications</h3>
+<?php if (count($pendingApplications) > 0): ?>
+    <div class="card-grid">
+    <?php foreach ($pendingApplications as $app): ?>
+        <div class="app-card">
+            <h3><?= htmlspecialchars($app['freelancer_name']) ?> applied to 
+                <span class="job-title">"<?= htmlspecialchars($app['job_title']) ?>"</span>
+            </h3>
 
-                    <p><strong>Cover Letter:</strong></p>
-                    <p class="cover-letter"><?= nl2br(htmlspecialchars($app['cover_letter'])) ?></p>
+            <p><strong>Status:</strong> <?= ucfirst($app['status']) ?></p>
 
-                    <p><strong>Experience Summary:</strong></p>
-                    <p class="exp"><?= nl2br(htmlspecialchars($app['experience_summary'])) ?></p>
+            <p><strong>Cover Letter:</strong></p>
+            <p><?= nl2br(htmlspecialchars($app['cover_letter'])) ?></p>
 
-                    <p><strong>Skills Used:</strong></p>
-                    <p class="skills"><?= nl2br(htmlspecialchars($app['skills_used'])) ?></p>
+            <p><strong>Experience:</strong> <?= nl2br(htmlspecialchars($app['experience_summary'])) ?></p>
+            <p><strong>Skills:</strong> <?= nl2br(htmlspecialchars($app['skills_used'])) ?></p>
+            <p><strong>Clarifications:</strong> <?= nl2br(htmlspecialchars($app['questions_clarifications'])) ?></p>
+            <p><strong>Availability:</strong> <?= htmlspecialchars($app['availability']) ?> hrs/week</p>
 
-                    <p><strong>Questions / Clarifications:</strong></p>
-                    <p class="questions"><?= nl2br(htmlspecialchars($app['questions_clarifications'])) ?></p>
+            <p><strong>Attachment:</strong> 
+                <?php if (!empty($app['attachment'])): ?>
+                    <a href="public/uploads/<?= htmlspecialchars($app['attachment']) ?>" class="view-btn" target="_blank">View Attachment</a>
+                <?php else: ?>
+                    None
+                <?php endif; ?>
+            </p>
 
-                    <p><strong>Availability:</strong> <?= htmlspecialchars($app['availability']) ?> (hours/week)</p>
+            <a href="index.php?controller=freelancer&action=viewProfile&freelancer_id=<?= $app['freelancer_id'] ?>" 
+               data-id="<?= $app['freelancer_id'] ?>" 
+               class="view-profile-btn">
+               View Profile
+            </a>
 
-                    <?php if (!empty($app['attachment'])): ?>
-                        <a href="public/uploads/<?= htmlspecialchars($app['attachment']) ?>" class="view-btn" target="_blank">View Attachment</a>
-                    <?php else: ?>
-                        <span class="no-attachment">No attachment</span>
-                    <?php endif; ?>
+            <div class="action-buttons">
+                <a href="index.php?controller=application&action=acceptApplication&application_id=<?= $app['id'] ?>" 
+                   class="accept-btn" 
+                   onclick="return confirm('Are you sure you want to accept this application? This will reject all others.')">Accept</a>
 
-                    <div class="action-buttons">
-
-                    <form action="index.php?controller=application&action=acceptApplication" method="post">
-    <input type="hidden" name="application_id" value="<?= $app['id'] ?>">
-    <button type="submit" class="accept-btn">Accept</button>
-</form>
-
-<!-- Reject Application Form -->
-<form action="index.php?controller=application&action=rejectApplication" method="post">
-    <input type="hidden" name="application_id" value="<?= $app['id'] ?>">
-    <button type="submit" class="reject-btn">Reject</button>
-</form>
-
-
-
-                        <form action="index.php?controller=client&action=messageFreelancer" method="get" style="display:inline;">
-    <input type="hidden" name="freelancer_id" value="<?= $app['freelancer_id'] ?>">
-    <button type="submit" class="message-btn">Message Freelancer</button>
-</form>
-
-
-                    </div>
-                </div>
-            <?php endforeach; ?>
+                <form action="index.php?controller=application&action=rejectApplication" method="post" style="display:inline;">
+                    <input type="hidden" name="application_id" value="<?= $app['id'] ?>">
+                    <button type="submit" class="reject-btn">Reject</button>
+                </form>
+            </div>
         </div>
-    <?php else: ?>
-        <p class="no-applications">No applications received yet.</p>
-    <?php endif; ?>
+    <?php endforeach; ?>
+    </div>
+<?php else: ?>
+    <p class="no-applications">No pending applications.</p>
+<?php endif; ?>
+
+            </div>
+
+            <!-- Accepted Applications -->
+            <div class="accepted-applications-list">
+                <h3>Accepted Applications</h3>
+                <?php if (count($acceptedApplications) > 0): ?>
+                    <div class="card-grid">
+                    <?php foreach ($acceptedApplications as $app): ?>
+                        <div class="app-card accepted">
+                            <h3><?= htmlspecialchars($app['freelancer_name']) ?> was accepted for 
+                                <span class="job-title">"<?= htmlspecialchars($app['job_title']) ?>"</span>
+                            </h3>
+
+                            <p><strong>Status:</strong> Accepted</p>
+
+                            <a href="index.php?controller=freelancer&action=viewProfile&freelancer_id=<?= $app['freelancer_id'] ?>" 
+                               data-id="<?= $app['freelancer_id'] ?>" 
+                               class="view-profile-btn">
+                               View Profile
+                            </a>
+   
+
+   <a href="index.php?controller=jobtracking&action=jobTracking&job_id=<?= $app['job_id'] ?>" class="track-btn">Go to Job Tracking</a>
+
+
+                        </div>
+                    <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="no-applications">No accepted applications yet.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="freelancerProfileModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="modal-body">
+                <!-- AJAX-loaded profile goes here -->
+            </div>
+        </div>
+    </div>
 </main>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const profileButtons = document.querySelectorAll(".view-profile-btn");
+    const modal = document.getElementById("freelancerProfileModal");
+    const closeBtn = document.querySelector(".close-btn");
 
-</body>
+    profileButtons.forEach(button => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault(); // stop link from redirecting
+            const freelancerId = button.getAttribute("data-id");
+
+            fetch(`index.php?controller=freelancer&action=viewProfile&freelancer_id=${freelancerId}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("modal-body").innerHTML = data;
+                    modal.classList.remove("hidden");
+                    modal.classList.add("active");
+                })
+                .catch(error => console.error("Error loading profile:", error));
+        });
+    });
+
+    closeBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.classList.remove("active");
+        }
+    });
+});
+</script>
+
 </html>

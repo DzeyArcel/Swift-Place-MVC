@@ -78,6 +78,14 @@ class FreelancerNotification {
         $stmt->execute();
         $stmt->close();
     }
+
+    public static function create($freelancerId, $message)
+{
+    $db = Database::getConnection();
+    $stmt = $db->prepare("INSERT INTO freelancer_notifications (freelancer_id, message, is_read, created_at) VALUES (?, ?, 0, NOW())");
+    return $stmt->execute([$freelancerId, $message]);
+}
+
 }
 
 class ClientNotification {

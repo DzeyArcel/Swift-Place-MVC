@@ -1,15 +1,13 @@
-// client-side chat.js for messaging system
-
 // Function to load messages for the chat interface
 function loadMessages() {
     const freelancerId = new URLSearchParams(window.location.search).get('freelancer_id');
-    const clientId = new URLSearchParams(window.location.search).get('client_id');
 
-    fetch(`index.php?controller=client&action=loadMessages&client_id=${clientId}&freelancer_id=${freelancerId}`)
+    fetch(`index.php?controller=client&action=loadMessages&freelancer_id=${freelancerId}`)
         .then(response => response.json())
         .then(data => {
             const chatBox = document.getElementById('chat-box');
             chatBox.innerHTML = "";  // Clear previous messages
+
             data.forEach(msg => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add(msg.sender_type === 'client' ? 'sent' : 'received');
@@ -20,40 +18,45 @@ function loadMessages() {
                 `;
                 chatBox.appendChild(messageDiv);
             });
+
             chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll to the bottom
-        });
+        })
+        .catch(error => console.error("Error loading messages:", error));
 }
 
-// Send the message using AJAX
-// client-side chat.js for messaging system
-
-// Function to send message
-document.getElementById('message-form').addEventListener('submit', function(event) {
+// Event listener for sending a message
+document.getElementById('message-form').addEventListener('submit', function (event) {
     event.preventDefault();
 
-    const message = document.getElementById('message').value;
+    const message = document.getElementById('message').value.trim();
     const freelancerId = new URLSearchParams(window.location.search).get('freelancer_id');
-    const clientId = new URLSearchParams(window.location.search).get('client_id');
 
-    // Send the message using AJAX
+    if (!message) {
+        alert("Please enter a message.");
+        return;
+    }
+
     fetch('index.php?controller=client&action=sendMessage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `client_id=${clientId}&message=${encodeURIComponent(message)}&freelancer_id=${freelancerId}`
+        body: `message=${encodeURIComponent(message)}&freelancer_id=${freelancerId}`
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            loadMessages();  // Reload messages after sending
-            document.getElementById('message').value = '';  // Clear the message input field
-        } else {
-            alert(data.error);  // Show error if message wasn't sent
-        }
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('message').value = '';
+                loadMessages();  // Reload after sending
+            } else {
+                alert(data.error || "Failed to send message.");
+            }
+        })
+        .catch(error => console.error("Send error:", error));
 });
 
-// Load messages on page load
-window.onload = loadMessages;
+// Load messages when page loads
+window.onload = () => {
+    loadMessages();
 
-
-
+    // Optional: refresh every 10 seconds
+    setInterval(loadMessages, 10000);
+};
