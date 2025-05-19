@@ -33,7 +33,7 @@
                 <div class="job-card">
                     <h3><?= htmlspecialchars($row['job_title']) ?></h3>
                     <p><strong>Category:</strong> <?= htmlspecialchars($row['category']) ?></p>
-                    <p><strong>Budget:</strong> $<?= htmlspecialchars($row['budget']) ?></p>
+                    <p><strong>Salary:</strong> $<?= htmlspecialchars($row['budget']) ?></p>
                     <p><strong>Deadline:</strong> <?= htmlspecialchars($row['deadline']) ?></p>
                     <p><strong>Type:</strong> <?= htmlspecialchars($row['job_type']) ?></p>
                     <p><strong>Experience Level:</strong> <?= htmlspecialchars($row['experience_level']) ?></p>

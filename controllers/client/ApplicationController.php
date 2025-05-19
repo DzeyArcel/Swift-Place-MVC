@@ -4,38 +4,82 @@ require_once __DIR__ . '/../../config/db.php';
 
 class ApplicationController
 {
-    
     public function acceptApplication() {
         session_start();
+    
         if (!isset($_GET['application_id'])) {
             header("Location: index.php?controller=client&action=viewApplications&error=missing_id");
             exit();
         }
     
         $application_id = $_GET['application_id'];
+        $userId = $_SESSION['user_id'];
         $db = Database::getConnection();
     
-        // Get job ID
-        $stmt = $db->prepare("SELECT job_id FROM job_applications WHERE id = ?");
+        // 1. Get job_id and freelancer_id
+        $stmt = $db->prepare("SELECT job_id, freelancer_id FROM job_applications WHERE id = ?");
+        if (!$stmt) {
+            die("Error preparing statement: " . $db->error);
+        }
         $stmt->bind_param("i", $application_id);
         $stmt->execute();
-        $stmt->bind_result($jobId);
+        $stmt->bind_result($jobId, $freelancerId);
         $stmt->fetch();
         $stmt->close();
     
-        // Reject all other applications for the job
+        // 2. Reject all other applications
         $stmt = $db->prepare("UPDATE job_applications SET status = 'rejected' WHERE job_id = ? AND id != ?");
+        if (!$stmt) {
+            die("Error preparing statement (reject others): " . $db->error);
+        }
         $stmt->bind_param("ii", $jobId, $application_id);
         $stmt->execute();
         $stmt->close();
     
-        // Accept this one
+        // 3. Accept the current application
         $stmt = $db->prepare("UPDATE job_applications SET status = 'accepted' WHERE id = ?");
+        if (!$stmt) {
+            die("Error preparing statement (accept current): " . $db->error);
+        }
         $stmt->bind_param("i", $application_id);
         $stmt->execute();
         $stmt->close();
     
-        // Redirect back to applications (not directly to job tracking)
+        // 4. Mark the job as in-progress
+        $stmt = $db->prepare("UPDATE jobs SET status = 'in-progress' WHERE id = ?");
+        if (!$stmt) {
+            die("Error preparing statement (update job): " . $db->error);
+        }
+        $stmt->bind_param("i", $jobId);
+        $stmt->execute();
+        $stmt->close();
+    
+        // 5. Get job title
+        $stmt = $db->prepare("SELECT job_title FROM jobs WHERE id = ?");
+        if (!$stmt) {
+            die("Error preparing statement (get title): " . $db->error);
+        }
+        $stmt->bind_param("i", $jobId);
+        $stmt->execute();
+        $stmt->bind_result($jobTitle);
+        $stmt->fetch();
+        $stmt->close();
+    
+        // 6. Send notification to freelancer
+        $notificationMessage = "Congratulations! Your application for the job '$jobTitle' has been accepted by the client.";
+        $notificationType = 'freelancer';
+        $notificationLink = '';
+        $isRead = 0;
+    
+        $stmt = $db->prepare("INSERT INTO notifications (user_id, type, message, link, is_read, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
+        if (!$stmt) {
+            die("Error preparing statement (notify): " . $db->error);
+        }
+        $stmt->bind_param("isssi", $freelancerId, $notificationType, $notificationMessage, $notificationLink, $isRead);
+        $stmt->execute();
+        $stmt->close();
+    
+        // 7. Redirect
         header("Location: index.php?controller=client&action=viewApplications&accepted=true");
         exit();
     }

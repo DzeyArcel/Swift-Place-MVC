@@ -9,18 +9,17 @@
 </head>
 <body>
 
-<header>
-    <div class="navbar">
-        <div class="logo-container">
-            <img src="public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
-        </div>
-        <nav>
-            <a href="index.php?controller=freelancer&action=dashboard">Dashboard</a>
-            <a href="index.php?controller=freelancer&action=myServices">Your Posted Services</a>
-            <a href="index.php?controller=freelancer&action=profile">Profile</a>
-            <a href="index.php?controller=freelancer&action=logout">Logout</a>
-        </nav>
+<header class="topbar">
+    <div class="logo-container">
+        <img src="public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
     </div>
+    <nav class="nav-links">
+        <ul>
+            <li><a href="javascript:history.back()">&#8617;</a></li>
+            <li><a href="index.php?controller=freelancer&action=dashboard">Dashboard</a></li>
+            <li><a href="index.php?controller=auth&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
 </header>
     
 <section class="edit-service">

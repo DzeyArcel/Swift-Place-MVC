@@ -1,28 +1,183 @@
+/* post-service.css */
+
+/* Import Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 body {
-    font-family: Arial;
-    background: #f7f7f7;
-    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #221F3B, #050505);
+    color: #EBEBEB;
+    margin: 0;
+    padding: 0;
 }
+
 .form-container {
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    box-shadow: 0 0 10px #ccc;
-    border-radius: 10px;
+    max-width: 700px;
+    margin: 100px auto;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
 }
-input, textarea {
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #EBEBEB;
+    font-weight: 600;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="file"],
+form select,
+form textarea {
     width: 100%;
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-button {
-    padding: 10px 20px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
     border: none;
-    background-color: #5a67d8;
-    color: white;
-    border-radius: 5px;
+    border-radius: 10px;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #EBEBEB;
+    backdrop-filter: blur(5px);
+}
+
+form input::placeholder,
+form textarea::placeholder {
+    color: #bbb;
+}
+
+form textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+form select {
+    background: rgba(255, 255, 255, 0.1);
+    color: #EBEBEB;
+}
+
+form label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ccc;
+}
+
+.rating-stars span {
+    font-size: 24px;
+    color: gold;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #EBEBEB;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
     cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+button[type="submit"]:hover {
+    transform: scale(1.05);
+    opacity: 0.95;
+}
+
+/* Optional: Make form fields glow on focus */
+form input:focus,
+form textarea:focus,
+form select:focus {
+    outline: none;
+    box-shadow: 0 0 8px #6F4A8E;
+}
+
+.topbar {
+    width: 100%;
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #EBEBEB;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 70px;
+    z-index: 1000;
+    transition: 0.4s ease-in-out;
+}
+
+/* Logo Styling */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    width: 180px;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.logo-img:hover {
+    transform: scale(1.1);
+}
+
+/* Navigation Links */
+.nav-links {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav-links ul li {
+    margin: 0 15px;
+}
+
+/* Navigation Buttons - Sleek Look */
+.nav-links ul li a {
+    text-decoration: none;
+    color: #EBEBEB;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.nav-links ul li a:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Logout Button */
+.logout-btn {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-right: 20px;
+    transition: all 0.3s ease-in-out;
+    color: #EBEBEB;
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    transform: scale(1.1);
 }

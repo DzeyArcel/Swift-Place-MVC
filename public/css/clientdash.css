@@ -1,81 +1,62 @@
-body {
-    font-family: Arial, sans-serif;
+/* General Reset and Font */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f8f8f8;
+    box-sizing: border-box;
 }
-/* Premium Navbar Design */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #f1f5f9;
+}
+
+/* Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 40px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
+    background-color: #221F3B;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .logo-img {
-    width: 160px;
-    max-height: 60px;
-    height: auto;
-    object-fit: contain;
-}
-
-.search-bar {
-    width: 35%;
-    padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-    background-color: #f9f9f9;
-    transition: all 0.3s ease;
-}
-
-.search-bar:focus {
-    border-color: #1dbf73;
-    outline: none;
-    background-color: #fff;
+    height: 50px;
 }
 
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 1.5rem;
 }
 
 .nav-links a {
+    color: #f1f5f9;
     text-decoration: none;
-    color: #333;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.nav-links a:hover,
+.nav-links .notification-icon:hover {
+    color: #B095D4;
+}
+
+.logout {
+    background-color: #6F4A8E;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
     font-weight: 600;
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: background 0.3s ease, color 0.3s ease;
+    border: none;
+    text-decoration: none;
 }
 
-.nav-links a:hover {
-    color: #fff;
-    background-color: #1dbf73;
-}
-
-.logout-btn {
-    background-color: #ff4d4f;
-    color: #fff !important;
-    padding: 8px 14px;
-    border-radius: 6px;
-    transition: background 0.3s ease;
-}
-
-.logout-btn:hover {
-    background-color: #e04345;
+.logout:hover {
+    background-color: #B095D4;
 }
 
 /* Notification Icon */
@@ -83,220 +64,118 @@ body {
     position: relative;
 }
 
-.notification-icon i {
-    font-size: 18px;
-    color: #555;
-    cursor: pointer;
-}
-
 .notification-count {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background-color: #ff4d4f;
+    background-color: #ef4444;
     color: white;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 2px 6px;
     border-radius: 50%;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    position: absolute;
+    top: -10px;
+    right: -10px;
 }
 
-
+/* Hero Section */
 .hero {
-    background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
-    color: white;
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    padding: 3rem 2rem;
     text-align: center;
-    padding: 50px 20px;
+    color: #f1f5f9;
 }
 
 .hero h1 {
-    font-size: 36px;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .hero p {
-    font-size: 18px;
-    margin-top: 10px;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
 }
 
-.hero button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: white;
-    color: #333;
+.post-job-link {
+    display: inline-block;
+    background-color: #6F4A8E;
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
     border: none;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s;
 }
 
-.hero button:hover {
-    background: #1dbf73;
-    color: white;
+.post-job-link:hover {
+    background-color: #B095D4;
 }
 
-
-
-
-/* Footer */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-footer {
-    background: #111;
-    color: white;
-    padding: 30px 20px;
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-}
-
-.footer-container {
-    max-width: 1100px;
+/* Recommendations Section */
+.recommendations {
+    padding: 2rem;
+    max-width: 1200px;
     margin: auto;
 }
 
-/* Footer Links */
-.footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.footer-links a {
-    color: #ddd;
-    text-decoration: none;
-    font-size: 1em;
-    transition: color 0.3s ease-in-out;
-}
-
-.footer-links a:hover {
-    color: #1DBF73; /* Fiverr Green */
-}
-
-/* Social Icons */
-.social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.social-icons a {
-    font-size: 1.5em;
-    color: white;
-    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-.social-icons a:hover {
-    transform: scale(1.2);
-    color: #1DBF73;
-}
-
-/* Copyright */
-footer p {
-    font-size: 0.9em;
-    color: #aaa;
-}
-
-
-/* mao nig job ha koleray */
-/* Recommendations Section */
-.recommendations {
-    padding: 60px 20px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    overflow: auto;
-}
-
-/* Heading */
 .recommendations h2 {
-    font-size: 30px;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 30px;
     text-align: center;
+    margin-bottom: 1.5rem;
 }
 
-/* Grid Layout for Service Cards */
 .service-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    padding: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
 }
 
-/* Individual Service Card Style */
 .card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(6px);
+    color: #f1f5f9;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #6F4A8E;
+    transition: transform 0.2s ease;
 }
 
-/* Hover Effect on Service Cards */
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
 }
 
-/* Service Image Styling */
 .service-img {
     width: 100%;
-    height: 220px;
+    height: 200px;
     object-fit: cover;
-    border-bottom: 2px solid #f4f4f4;
+    border-radius: 8px;
+    margin-bottom: 1rem;
 }
 
-/* Card Content Styling */
 .card-content {
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+    gap: 0.5rem;
 }
 
-/* Freelancer Info */
 .freelancer-info {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .profile-img {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    margin-right: 15px;
     object-fit: cover;
-    border: 2px solid #fff;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
 }
 
-.card-content h3 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
-    margin: 0 0 12px;
-}
-
-.card-content p {
-    font-size: 15px;
-    color: #555;
-    margin: 6px 0;
-}
-
-/* Stars Rating */
+/* Rating Form */
 .stars {
     display: flex;
-    justify-content: flex-start;
-    margin-top: 12px;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.3rem;
 }
 
 .stars input[type="radio"] {
@@ -304,296 +183,72 @@ footer p {
 }
 
 .stars label {
-    font-size: 20px;
+    font-size: 1.2rem;
     color: #ccc;
     cursor: pointer;
-    transition: color 0.3s ease;
 }
 
-.stars input[type="radio"]:checked ~ label,
+.stars input[type="radio"]:checked ~ label {
+    color: #fbbf24;
+}
+
 .stars label:hover,
 .stars label:hover ~ label {
-    color: gold;
+    color: #fbbf24;
 }
 
-/* Rate Button */
-.rating-form button {
-    padding: 10px 20px;
-    background: #3498db;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 12px;
+button[type="submit"] {
+    background-color: #6F4A8E;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
     font-weight: 600;
-    font-size: 16px;
-}
-
-.rating-form button:hover {
-    background-color: #2980b9;
-}
-
-/* Add small adjustments for responsiveness */
-@media (max-width: 768px) {
-    .service-cards {
-        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    }
-
-    .card {
-        max-width: 100%;
-    }
-}
-/* Notification Icon */
-.notif-icon {
-    position: relative;
-    display: inline-block;
+    border: none;
+    margin-top: 0.5rem;
     cursor: pointer;
 }
 
-.notif-count {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: red;
-    color: white;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 50%;
+button[type="submit"]:hover {
+    background-color: #B095D4;
 }
 
-/* General Styles for the Notifications Icon and Dropdown */
-.notifications {
-    position: relative;
-}
-
-.badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: red;
-    color: white;
-    padding: 3px 6px;
-    border-radius: 50%;
-}
-
-.dropdown {
-    display: none;
-    position: absolute;
-    top: 30px;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 250px;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.notifications:hover .dropdown {
-    display: block;
-}
-
-.notification-item {
-    padding: 10px;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.notification-item.unread {
-    background-color: #f9f9f9;
-}
-
-
-
-/* Input Search Box */
-input[type="text"] {
-    padding: 10px;
-    width: 200px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-right: 15px;
-}
-
-/* Notification Bell Styles */
-.notifications a {
-    color: white;
-    font-size: 20px;
-    text-decoration: none;
-}
-
-.navbar nav {
-    display: flex;
-    align-items: center; /* Align all nav items vertically */
-}
-
-.navbar nav a {
-    margin: 0 15px; /* Adds space between each nav item */
-    text-decoration: none; /* Removes the underline */
-    color: #333; /* Change to your preferred color */
-    font-size: 16px;
-}
-
-
-/* Styles for the notification icon and modal */
-.notification-icon {
-    position: relative;
-    display: inline-block;
-}
-
-.notification-count {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: red;
-    color: white;
-    border-radius: 100%;
-    padding: 5px 5px;
-    font-size: 8px;
-}
-
-/* The Modal */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed;
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-    background-color: #fff;
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: 5px;
-    width: 40%;
-    max-height: 80%;
-    overflow-y: auto;
-}
-
-/* Close Button */
-.close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Notification Item Styles */
-.notification-item {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-}
-
-.notification-item.unread {
-    font-weight: bold;
-    background-color: #f5f5f5;
-}
-
-.notification-item a {
-    text-decoration: none;
-    color: #000;
-}
-
-.timestamp {
-    color: #888;
-    font-size: 12px;
-    margin-left: 10px;
-}
-
-
-.post-job-link {
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #981ebd; /* Green background */
-    padding: 12px 24px;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-.post-job-link:hover {
-    background-color: #940c7f; /* Darker green when hovering */
-    transform: scale(1.05); /* Slightly enlarge the link on hover */
-}
-
-.post-job-link:active {
-    background-color: #660947; /* Even darker green when clicked */
-    transform: scale(1); /* Return to normal size */
-}
-
-
-.profile-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-}
-.freelancer-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-
+/* Job Section */
 .job-section {
-    padding: 60px 20px;
-    background-color: #f5f5f5;
-    font-family: 'Roboto', sans-serif; /* Premium font for body */
+    padding: 2rem;
+    max-width: 1200px;
+    margin: auto;
 }
 
 .job-section h2 {
-    font-size: 32px;
-    font-weight: 700;
     text-align: center;
-    color: #333;
-    margin-bottom: 40px;
-    letter-spacing: 0.5px;
+    margin-bottom: 1.5rem;
 }
 
 .job-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
 }
 
 .job-card {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #ddd;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(6px);
+    color: #f1f5f9;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #6F4A8E;
+    transition: transform 0.2s ease;
 }
 
 .job-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
 }
 
 .job-header {
     display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .client-profile-pic {
@@ -601,75 +256,115 @@ input[type="text"] {
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 15px;
 }
 
 .job-info h3 {
-    font-size: 24px;
+    margin-bottom: 0.3rem;
+}
+
+.desc {
+    margin-top: 0.5rem;
+}
+
+/* Notification Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(17, 15, 25, 0.9);
+}
+
+.modal-content {
+    background-color: #2D2546;
+    color: #f1f5f9;
+    margin: 8% auto;
+    padding: 1.5rem;
+    border: 1px solid #6F4A8E;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+}
+
+.close-btn {
+    float: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+}
+
+.notification-list {
+    list-style: none;
+    padding: 0;
+}
+
+.notification-item {
+    background-color: #ffffff;
+    color: #1f2937;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+.notification-item.unread {
+    background-color: #f9fafb;
     font-weight: 600;
-    color: #111;
-    margin-bottom: 5px;
 }
 
-.job-info p {
-    font-size: 16px;
-    color: #555;
+.timestamp {
+    display: block;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 0.3rem;
 }
 
-.job-card p {
-    font-size: 16px;
-    color: #555;
-    margin: 8px 0;
+/* Footer */
+footer {
+    background-color: #221F3B;
+    color: #e0def4;
+    padding: 2rem;
+    margin-top: 3rem;
 }
 
-.job-card p strong {
-    font-weight: 600;
-    color: #333;
+.footer-container {
+    max-width: 1200px;
+    margin: auto;
+    text-align: center;
 }
 
-.job-card .desc {
-    margin-top: 15px;
-    color: #777;
-    font-style: italic;
-    font-size: 14px;
-    line-height: 1.6;
+.footer-links {
+    margin-bottom: 1rem;
 }
 
-.job-card .posted-time {
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 15px;
+.footer-links a {
+    color: #cbbfea;
+    margin: 0 0.8rem;
+    text-decoration: none;
+    font-size: 0.95rem;
 }
 
-.job-card .desc {
-    flex-grow: 1;
+.footer-links a:hover {
+    text-decoration: underline;
+    color: #B095D4;
 }
 
-@media (max-width: 768px) {
-    .job-section h2 {
-        font-size: 28px;
-    }
-
-    .job-card {
-        padding: 20px;
-    }
+.social-icons {
+    margin-top: 1rem;
 }
 
-
-/* Adding premium font style to the entire page */
-
-
-h2, h3, p {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.social-icons a {
+    color: #cbbfea;
+    margin: 0 0.5rem;
+    font-size: 1.2rem;
 }
 
-/* Applying smooth transitions */
-.job-card {
-    transition: all 0.3s ease-in-out;
+.social-icons a:hover {
+    color: #B095D4;
 }
-
-/* Adding subtle hover effect */
-.job-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
-}
+ 

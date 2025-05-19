@@ -6,6 +6,9 @@
     <title>Freelancer Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/Swift-Place/public/css/freelancedash.css">
+    <!-- Make sure Font Awesome is included -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 <?php
@@ -17,38 +20,47 @@ if (isset($_SESSION['freelancer_id'])) {
 }
 ?>
 
+
+
+
+
 <header>
     <div class="navbar">
+        <!-- Logo -->
         <div class="logo-container">
             <img src="/Swift-Place/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
+           
         </div>
-        <input type="text" placeholder="Search for services...">
-        <nav>
-            <a href="index.php?controller=freelancer&action=myServices">Your Posted Services</a>
+
+
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+            <a href="index.php?controller=freelancer&action=myServices"><i class="fas fa-briefcase"></i> Services</a>
 
             <?php if (isset($application['id'])): ?>
-                <!-- Job Tracking Link is shown only if freelancer has an application -->
-                <a href="index.php?controller=freelancer&action=viewJobTracking&application_id=<?= $application['id'] ?>">Job Tracking</a>
+                <a href="index.php?controller=freelancer&action=viewJobTracking&application_id=<?= $application['id'] ?>">
+                    <i class="fas fa-tasks"></i> Job Tracking
+                </a>
             <?php else: ?>
-                <!-- Display message if no application exists -->
-                <span>Job Tracking (No application)</span>
+                <span class="disabled-link"><i class="fas fa-tasks"></i> Job Tracking</span>
             <?php endif; ?>
 
             <a href="index.php?controller=freelancer&action=profile"><i class="fas fa-user"></i> Profile</a>
             <a href="index.php?controller=freelancer&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-        </nav>
 
-        <!-- Notification icon with modal -->
-        <div class="notification-icon" id="notification-icon">
-            <a href="javascript:void(0)" onclick="openNotificationModal()">
-                <i class="fa fa-bell"></i>
+            <!-- Notifications -->
+            <a href="javascript:void(0)" onclick="openNotificationModal()" class="notification-icon">
+                <i class="fas fa-bell"></i>
                 <?php if (isset($unread_notifications) && $unread_notifications > 0): ?>
                     <span class="notification-count"><?php echo $unread_notifications; ?></span>
                 <?php endif; ?>
             </a>
-        </div>
+        </nav>
     </div>
 </header>
+
+
 
 
   
@@ -113,28 +125,47 @@ if (isset($_SESSION['freelancer_id'])) {
     <section class="job-listings">
     <h2>Available Jobs</h2>
     <div class="job-cards">
-        <?php foreach ($jobs as $job): 
+        <?php 
+        $hasOpenJobs = false;
+        foreach ($jobs as $job): 
+            if ($job['status'] !== 'open') continue;
+            $hasOpenJobs = true;
             $postedAgo = Job::formatTimeSincePost($job['posted_at']);
+            $clientProfilePic = !empty($job['client_profile_picture'])
+                ? 'public/uploads/' . htmlspecialchars($job['client_profile_picture'])
+                : 'public/uploads/default_profile.png';
         ?>
-            <div class="job-post">
-                <h3><?= htmlspecialchars($job['job_title']) ?></h3>
-                <p class="desc"><?= htmlspecialchars($job['job_description']) ?></p>
-                <p><strong>Skills:</strong> <?= htmlspecialchars($job['required_skill']) ?></p>
-                <p><strong>Budget:</strong> $<?= htmlspecialchars($job['budget']) ?></p>
-                <p><strong>Deadline:</strong> <?= htmlspecialchars($job['deadline']) ?></p>
-                <p><strong>Type:</strong> <?= htmlspecialchars($job['job_type']) ?></p>
-                <p><strong>Experience:</strong> <?= htmlspecialchars($job['experience_level']) ?></p>
-                <p><strong>Posted by:</strong> <?= htmlspecialchars($job['poster_name']) ?></p>
-                <p class="posted-time"><em>Posted: <?= $postedAgo ?></em></p>
-
-                <form action="index.php?controller=freelancerApplication&action=showApplicationForm" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                    <button class="apply-btn" type="submit">Apply</button>
-                </form>
+        
+        <div class="job-post">
+            <div class="job-header">
+                <img src="<?= $clientProfilePic ?>" alt="Client Profile" class="client-profile-pic">
+                <div class="job-info">
+                    <h3><?= htmlspecialchars($job['job_title']) ?></h3>
+                    <p class="posted-time"><em>Posted: <?= $postedAgo ?></em></p>
+                    <p><strong>Posted by:</strong> <?= htmlspecialchars($job['poster_name']) ?></p>
+                </div>
             </div>
+            
+            <p class="desc"><?= htmlspecialchars($job['job_description']) ?></p>
+            <p><strong>Skills:</strong> <?= htmlspecialchars($job['required_skill']) ?></p>
+            <p><strong>Budget:</strong> $<?= htmlspecialchars($job['budget']) ?></p>
+            <p><strong>Deadline:</strong> <?= htmlspecialchars($job['deadline']) ?></p>
+            <p><strong>Type:</strong> <?= htmlspecialchars($job['job_type']) ?></p>
+            <p><strong>Experience:</strong> <?= htmlspecialchars($job['experience_level']) ?></p>
+
+            <form action="index.php?controller=freelancerApplication&action=showApplicationForm" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
+                <button class="apply-btn" type="submit">Apply</button>
+            </form>
+        </div>
         <?php endforeach; ?>
+
+        <?php if (!$hasOpenJobs): ?>
+            <p>No available jobs at the moment.</p>
+        <?php endif; ?>
     </div>
 </section>
+
 
 
 
@@ -151,8 +182,8 @@ if (isset($_SESSION['freelancer_id'])) {
 
                     // Determine Service Image Path
                     $serviceImage = !empty($service['media_path'])
-                        ? htmlspecialchars($service['media_path'])
-                        : null;
+        ? htmlspecialchars($service['media_path'])
+        : 'public/uploads/default_service.png';  // <-- Default service image here
 
                     // Freelancer Name
                     $freelancerName = htmlspecialchars(($service['first_name'] ?? '') . ' ' . ($service['last_name'] ?? ''));
@@ -188,8 +219,17 @@ if (isset($_SESSION['freelancer_id'])) {
                         <p class="posted-time"><strong>Posted:</strong> <?= Service::formatTimeSincePosted($service['created_at']) ?></p>
                         <p class="tags">Tags: <?= htmlspecialchars($service['tags']) ?></p>
                         <p class="price">Price: $<?= number_format($service['price'], 2) ?></p>
+
+                        <!-- Rating -->
                         <p class="rating">
-                            <?= isset($service['rating']) ? "Rating: ★ " . number_format($service['rating'], 1) : "No ratings yet" ?>
+                            <?php if (isset($service['rating']) && $service['rating'] !== null): ?>
+                                Rating:
+                                <?= str_repeat("★", floor($service['rating'])) ?>
+                                <?= str_repeat("☆", 5 - floor($service['rating'])) ?>
+                                (<?= number_format($service['rating'], 1) ?>)
+                            <?php else: ?>
+                                No ratings yet
+                            <?php endif; ?>
                         </p>
                     </div>
                 </div>
@@ -199,6 +239,7 @@ if (isset($_SESSION['freelancer_id'])) {
         <?php endif; ?>
     </div>
 </section>
+
 
 
 

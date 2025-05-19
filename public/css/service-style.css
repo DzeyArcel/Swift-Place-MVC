@@ -5,9 +5,15 @@
     font-family: Arial, sans-serif;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 body {
-    text-align: center;
-    background-color: #f9f9f9;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #221F3B, #050505);
+    color: #EBEBEB;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
 /* Navigation */
@@ -113,5 +119,7 @@ footer {
     border: none;
     cursor: pointer;
 }
+
+
 
 

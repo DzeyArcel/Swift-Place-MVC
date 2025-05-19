@@ -27,8 +27,7 @@ if (!isset($_SESSION['user_id'])) {
             <img src="/Swift-Place/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
         </div>
 
-        <input type="text" placeholder="Search for services..." class="search-bar">
-
+       
         <nav class="nav-links">
         <a href="index.php?controller=client&action=Clientdashboard">Dashboard</a>
         <a href="index.php?controller=client&action=viewApplications">Applications</a>
@@ -117,18 +116,17 @@ if (!isset($_SESSION['user_id'])) {
         <?php if (!empty($services)): ?>
             <?php foreach ($services as $service): ?>
                 <?php
-                    // Service image (already full path or partial path from DB)
                     $imagePath = !empty($service['media_path'])
                         ? htmlspecialchars($service['media_path'])
-                        : 'public/photos/default-service.jpg';
+                        : 'public/photos/default_service.png';
 
-                    // Profile picture with fallback
                     $profilePic = !empty($service['profile_picture'])
                         ? 'public/uploads/' . htmlspecialchars($service['profile_picture'])
                         : 'public/uploads/default_profile.png';
 
                     $postedTime = Service::formatTimeSincePosted($service['created_at']);
                     $freelancerName = htmlspecialchars(($service['first_name'] ?? '') . ' ' . ($service['last_name'] ?? ''));
+                    $avgRating = Service::getAverageRating($service['id']);
                 ?>
                 <div class="card">
                     <img class="service-img" src="<?= $imagePath ?>" alt="Service Image">
@@ -143,18 +141,19 @@ if (!isset($_SESSION['user_id'])) {
                         <p><strong>Expertise:</strong> <?= htmlspecialchars($service['expertise']) ?></p>
                         <p><strong>Price:</strong> $<?= number_format($service['price'], 2) ?></p>
                         <p><?= htmlspecialchars($service['description']) ?></p>
-                        <p><strong>Rating:</strong> <?= isset($service['rating']) ? number_format($service['rating'], 1) . ' ⭐' : 'No ratings yet' ?></p>
+                        <p><strong>Rating:</strong> <?= $avgRating ? number_format($avgRating, 1) . ' ⭐' : 'No ratings yet' ?></p>
                         <p><strong>Posted:</strong> <?= $postedTime ?></p>
 
-                        <form action="/?controller=client/service&action=rateService" method="post" class="rating-form">
+                        <!-- Rating Form -->
+                        <form action="index.php?controller=client&action=rateService" method="post">
                             <input type="hidden" name="service_id" value="<?= htmlspecialchars($service['id']) ?>">
                             <div class="stars">
                                 <?php for ($i = 5; $i >= 1; $i--): ?>
-                                    <input type="radio" name="rating" id="star<?= $i . '_' . $service['id'] ?>" value="<?= $i ?>">
+                                    <input type="radio" name="rating" id="star<?= $i . '_' . $service['id'] ?>" value="<?= $i ?>" required>
                                     <label for="star<?= $i . '_' . $service['id'] ?>">★</label>
                                 <?php endfor; ?>
                             </div>
-                            <button type="submit">Rate</button>
+                            <button type="submit">Submit Rating</button>
                         </form>
                     </div>
                 </div>
@@ -166,6 +165,16 @@ if (!isset($_SESSION['user_id'])) {
 </section>
 
 
+<!-- Optional JS to disable button after submission -->
+<script>
+document.querySelectorAll(".rating-form").forEach(form => {
+    form.addEventListener("submit", () => {
+        form.querySelector("button[type=submit]").disabled = true;
+    });
+});
+</script>
+
+
 
 
 
@@ -175,12 +184,12 @@ if (!isset($_SESSION['user_id'])) {
     <h2>Explore Jobs</h2>
     <div class="job-grid">
         <?php while ($job = $jobs->fetch_assoc()): ?>
+            <?php if ($job['status'] !== 'open') continue; // Skip non-open jobs ?>
+
             <?php
-                // Assuming the profile picture is stored in the client_profiles table
-                // You might need to fetch the client profile pic here.
                 $clientProfilePic = !empty($job['client_profile_picture'])
                     ? 'public/uploads/' . htmlspecialchars($job['client_profile_picture'])
-                    : 'public/uploads/default_profile.png'; // Default picture if not available
+                    : 'public/uploads/default_profile.png';
             ?>
             <div class="job-card">
                 <div class="job-header">
@@ -192,7 +201,7 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
                 <p><strong>Poster/Client:</strong> <?= htmlspecialchars($job['poster_name']) ?></p>
                 <p><strong>Category:</strong> <?= htmlspecialchars($job['category']) ?></p>
-                <p><strong>Budget:</strong> $<?= number_format($job['budget'], 2) ?></p>
+                <p><strong>Salary:</strong> $<?= number_format($job['budget'], 2) ?></p>
                 <p><strong>Deadline:</strong> <?= htmlspecialchars($job['deadline']) ?></p>
                 <p><strong>Skills:</strong> <?= htmlspecialchars($job['required_skill']) ?></p>
                 <p><strong>Type:</strong> <?= htmlspecialchars($job['job_type']) ?></p>
@@ -202,6 +211,7 @@ if (!isset($_SESSION['user_id'])) {
         <?php endwhile; ?>
     </div>
 </section>
+
 
 
 

@@ -1,95 +1,10 @@
-/* General styles for the page */
+/* General Body Styling */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
-}
-
-/* Notification section */
-.notifications {
-    margin: 10px auto;
-    background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 900px;
-}
-
-.notifications h2 {
-    font-size: 22px;
-    margin-bottom: 15px;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-.notification-item {
-    position: relative; /* Set position to relative to position the delete button inside it */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f5f5f5;
-    margin-bottom: 8px;
-    padding: 8px;
-    border-radius: 6px;
-    transition: background-color 0.3s ease;
-    padding-right: 35px; /* Leave space on the right for the delete button */
-}
-
-.notification-item:hover {
-    background-color: #e0e0e0;
-}
-
-.notification-item.unread {
-    background-color: #d1e7dd;
-}
-
-.notification-item a {
-    color: #333;
-    text-decoration: none;
-    font-size: 14px;
-    flex-grow: 1;
-}
-
-.notification-item .timestamp {
-    font-size: 12px;
-    color: #888;
-}
-
-/* Position the delete button at the bottom-right of the notification */
-.notification-item .delete-notification {
-    position: absolute;
-    bottom: 5px; /* Position at the bottom of the notification item */
-    right: 10px; /* Position 10px from the right edge */
-    color: red;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.notification-item .delete-notification:hover {
-    text-decoration: underline;
-}
-
-/* Container for unread notifications */
-.unread {
-    font-weight: bold;
-}
-
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-    .notifications {
-        margin: 10px;
-        padding: 15px;
-        width: 100%;
-    }
-
-    .notification-item {
-        padding: 8px 10px;
-    }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
 }
 
 /* Navbar */
@@ -97,75 +12,101 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #6F4A8E;
     padding: 15px 30px;
-    background-color: #fff;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
 }
 
 .logo-img {
-    width: 180px;
-    height: auto;
-    max-height: 60px;
+    height: 50px;
+    object-fit: contain;
 }
 
-.navbar nav {
-    display: flex;
-    align-items: center;
-}
-
-.navbar nav a {
-    margin-left: 15px;
+nav a {
+    color: white;
     text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    transition: color 0.3s;
+    margin-left: 25px;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
-.navbar nav a:hover {
-    color: #1dbf73;
+nav a:hover {
+    color: #a78bfa;
 }
 
-/* Notification item styles */
+.logout-btn {
+    color: #f87171 !important;
+}
+
+/* Notifications Section */
+.notifications {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.notifications h2 {
+    margin-bottom: 25px;
+    color: #4b3d69;
+    text-align: center;
+}
+
+/* Notification Items */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
 .notification-item {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    transition: background-color 0.2s ease-in-out;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f5f5f5;
-    margin-bottom: 8px;
-    padding: 8px;
-    border-radius: 6px;
-    transition: background-color 0.3s ease;
-}
-
-.notification-item:hover {
-    background-color: #e0e0e0;
 }
 
 .notification-item.unread {
-    background-color: #d1e7dd;
+    background-color: #f3e8ff;
+    border-left: 4px solid #6F4A8E;
+    font-weight: 600;
 }
 
-.notification-item a {
-    color: #333;
+.notification-content a {
+    color: #4b3d69;
     text-decoration: none;
-    font-size: 14px;
-    flex-grow: 1;
 }
 
-.notification-item .timestamp {
-    font-size: 12px;
-    color: #888;
+.notification-content a:hover {
+    text-decoration: underline;
 }
 
-.notification-item .delete-notification {
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
-    color: red;
+.timestamp {
+    display: block;
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+.delete-notification {
+    color: #ef4444;
+    font-size: 0.85rem;
     text-decoration: none;
-    font-size: 14px;
+    margin-left: 20px;
 }
 
-.notification-item .delete-notification:hover {
+.delete-notification:hover {
     text-decoration: underline;
 }

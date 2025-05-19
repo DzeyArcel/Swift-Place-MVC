@@ -4,43 +4,47 @@ require_once __DIR__ . '/../config/db.php';
 class Job {
     
     public static function getAllJobs() {
-        $conn = Database::getConnection();
-    
-        $stmt = $conn->prepare("
-             SELECT jobs.*, 
+    $conn = Database::getConnection();
+
+    $stmt = $conn->prepare("
+        SELECT jobs.*, 
                users.first_name AS poster_name, 
                client_profiles.profile_pic AS client_profile_picture
         FROM jobs
         JOIN users ON jobs.client_id = users.id
         JOIN client_profiles ON users.id = client_profiles.user_id
+        WHERE jobs.status = 'open'
         ORDER BY jobs.posted_at DESC
     ");
-    
-        if ($stmt) {
-            $stmt->execute();
-            return $stmt->get_result();
-        } else {
-            echo "❌ MySQL Error: " . $conn->error;
-            return new \mysqli_result($conn, null); // Avoid returning null
-        }
+
+    if ($stmt) {
+        $stmt->execute();
+        return $stmt->get_result();
+    } else {
+        error_log("❌ MySQL Error: " . $conn->error);
+        return []; // Return empty array to indicate no results
     }
+}
 
 
-    public static function create($client_id, $title, $description, $category, $budget, $deadline, $skills, $type, $experience) {
-        $conn = Database::getConnection();
-    
-        $created_at = date('Y-m-d H:i:s'); // get current timestamp
-    
-        $stmt = $conn->prepare("INSERT INTO jobs (client_id, job_title, job_description, category, budget, deadline, required_skill, job_type, experience_level, created_at) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    
-        $stmt->bind_param("isssdsssss", $client_id, $title, $description, $category, $budget, $deadline, $skills, $type, $experience, $created_at);
-    
-        if ($stmt->execute()) {
-            return $conn->insert_id;
-        }
-        return false;
+
+public static function create($client_id, $title, $description, $category, $budget, $deadline, $skills, $type, $experience) {
+    $conn = Database::getConnection();
+
+    $created_at = date('Y-m-d H:i:s'); // get current timestamp
+    $status = 'open'; // set default status
+
+    $stmt = $conn->prepare("INSERT INTO jobs (client_id, job_title, job_description, category, budget, deadline, required_skill, job_type, experience_level, status, created_at) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    $stmt->bind_param("isssdssssss", $client_id, $title, $description, $category, $budget, $deadline, $skills, $type, $experience, $status, $created_at);
+
+    if ($stmt->execute()) {
+        return $conn->insert_id;
     }
+    return false;
+}
+
     
 
     public static function notifyFreelancers($job_id, $client_id, $title) {
@@ -265,41 +269,187 @@ public static function getMilestones($jobId)
     }
     
     
-    public static function getJobsForFreelancer($freelancerId) {
-        $db = Database::getConnection();
+public static function getJobsForFreelancer($freelancerId)
+{
+    $db = Database::getConnection();
 
-        if (!$db) {
-            die('Failed to establish a database connection.');
-        }
+    $sql = "SELECT j.id, j.job_title, j.job_description, j.deadline, j.receipt, j.is_completed, j.budget, 
+                   u.first_name, u.last_name
+            FROM jobs j
+            JOIN users u ON j.client_id = u.id
+            JOIN job_applications a ON a.job_id = j.id
+            WHERE a.freelancer_id = ?
+              AND a.status = 'accepted'
+              AND (j.is_completed = 0 OR j.receipt IS NULL)";  // This line excludes finished and paid jobs
 
-        $sql = "SELECT j.*, u.first_name, u.last_name, a.freelancer_id
-        FROM jobs j
-        JOIN users u ON j.client_id = u.id
-        JOIN job_applications a ON a.job_id = j.id
-        WHERE a.freelancer_id = ? AND a.status = 'accepted'";
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param("i", $freelancerId);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-        $stmt = $db->prepare($sql);
-        if (!$stmt) {
-            die('Prepare failed: ' . $db->error);
-        }
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
 
-        $stmt->bind_param("i", $freelancerId);
+    
+    
+    
+public static function isJobOwnedByFreelancer($jobId, $freelancerId) {
+    $conn = Database::getConnection();
 
-        if (!$stmt->execute()) {
-            die('Execute failed: ' . $stmt->error);
-        }
+    // Correct query based on your job_applications table structure
+    $query = "SELECT COUNT(*) AS total 
+              FROM job_applications 
+              WHERE job_id = ? AND freelancer_id = ? AND status = 'accepted'";
+    
+    $stmt = $conn->prepare($query);
 
-        $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+    if (!$stmt) {
+        die("Prepare failed: " . $conn->error);
     }
+
+    $stmt->bind_param("ii", $jobId, $freelancerId);  // "ii" for two integers (job_id, freelancer_id)
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    return $row['total'] > 0;  // Return true if freelancer is linked to this job
+}
+
     
-    
-    
+public static function markAsPaid($jobId, $receiptFilename = null) {
+    $db = Database::getConnection();
+    $stmt = $db->prepare("UPDATE jobs SET is_completed = 1, receipt = ? WHERE id = ?");
+    $stmt->bind_param("si", $receiptFilename, $jobId);
+    $stmt->execute();
+    $stmt->close();
+}
+
 
     
 
+    public function updateJobSubmission($jobId, $filePath, $comments)
+{
+    global $db;
+
+    $query = "UPDATE jobs SET status = 'completed', final_attachment = :filePath, comments = :comments WHERE id = :jobId";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':filePath', $filePath);
+    $stmt->bindParam(':comments', $comments);
+    $stmt->bindParam(':jobId', $jobId);
+    $stmt->execute();
+}
+
+    public static function getAcceptedFreelancerId($jobId) {
+    $db = Database::getConnection();
+    $stmt = $db->prepare("SELECT freelancer_id FROM job_applications WHERE job_id = ? AND status = 'accepted' LIMIT 1");
+
+    if (!$stmt) {
+        throw new Exception("Failed to prepare statement.");
+    }
+
+    $stmt->bind_param("i", $jobId);
+    $stmt->execute();
+    $stmt->bind_result($freelancerId);
+    $stmt->fetch();
+    $stmt->close();
+
+    return $freelancerId;
+}
+
+public static function quitJob($jobId, $freelancerId)
+{
+    $db = Database::getConnection();
+
+    if (!$db) {
+        error_log("Database connection failed in quitJob.");
+        return false;
+    }
+
+    $stmt = $db->prepare("
+        UPDATE job_applications 
+        SET status = 'withdrawn' 
+        WHERE job_id = ? AND freelancer_id = ? AND status = 'accepted'
+    ");
+
+    if (!$stmt) {
+        error_log("Prepare failed: " . $db->error);
+        return false;
+    }
+
+    $stmt->bind_param("ii", $jobId, $freelancerId);
     
-    
+    if (!$stmt->execute()) {
+        error_log("Execute failed: " . $stmt->error);
+        return false;
+    }
+
+    // Make sure an actual row was updated
+    return $stmt->affected_rows > 0;
+}
+
+
+
+
+
+
+
+
+
+
+public static function getById($freelancerId)
+{
+    $db = Database::getConnection();
+    $stmt = $db->prepare("SELECT first_name, last_name FROM freelancers WHERE id = ?");
+    $stmt->bind_param("i", $freelancerId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
+}
+
+public static function getCompletedJobsForFreelancer($freelancerId)
+{
+    $db = Database::getConnection();
+    $sql = "SELECT j.id, j.job_title, j.job_description, j.deadline, j.receipt, j.is_completed, j.budget, 
+                   u.first_name, u.last_name
+            FROM jobs j
+            JOIN users u ON j.client_id = u.id
+            JOIN job_applications a ON a.job_id = j.id
+            WHERE a.freelancer_id = ?
+              AND a.status = 'accepted'
+              AND j.is_completed = 1
+              AND j.receipt IS NOT NULL";
+
+    $stmt = $db->prepare($sql);
+    $stmt->bind_param("i", $freelancerId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+public function getJobsByClientId($clientId) {
+    $conn = Database::getConnection();
+    $stmt = $conn->prepare("
+        SELECT jobs.*, 
+               users.first_name,
+               users.last_name,
+               users.email,
+               freelancer_profiles.phone,
+               freelancer_profiles.profile_pic,
+               freelancers.category
+        FROM jobs
+        LEFT JOIN freelancers ON jobs.freelancer_id = freelancers.id
+        LEFT JOIN users ON freelancers.user_id = users.id
+        LEFT JOIN freelancer_profiles ON users.id = freelancer_profiles.user_id
+        WHERE jobs.client_id = ?
+        ORDER BY jobs.posted_at DESC
+    ");
+    $stmt->bind_param("i", $clientId);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+
 }
 
 

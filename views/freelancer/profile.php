@@ -15,8 +15,7 @@
     </div>
     <nav class="nav-links">
         <ul>
-            <li><a href="index.php?controller=freelancer&action=dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="index.php?controller=freelancer&action=profile"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="javascript:history.back()">&#8617;</a></li>
             <li><a href="index.php?controller=freelancer&action=editProfile"><i class="fas fa-edit"></i> Edit Profile</a></li>
             <li><a href="index.php?controller=auth&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
@@ -25,7 +24,8 @@
 
 <!-- Profile Content -->
 <div class="profile-content">
-    <h1>Freelancer Profile</h1>
+    
+    <h1>Profile</h1>
     
     <?php
 $picture = !empty($profile['profile_picture']) ? 'public/uploads/' . $profile['profile_picture'] : 'public/uploads/default_profile.png';

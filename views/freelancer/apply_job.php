@@ -3,54 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Apply to Job</title>
-    <link rel="stylesheet" href="/public/css/style.css"> <!-- Optional -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            max-width: 700px;
-            margin: auto;
-            background-color: #f7f7f7;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        form {
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #ccc;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            margin-top: 20px;
-            padding: 12px;
-            width: 100%;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-    </style>
+    <link rel="stylesheet" href="public/css/job_application.css">
+    
 </head>
 <body>
+
+<header class="topbar">
+    <div class="logo-container">
+        <img src="public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
+    </div>
+    <nav class="nav-links">
+        <ul>
+            <li><a href="javascript:history.back()">&#8617;</a></li>
+            <li><a href="index.php?controller=auth&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+</header>
 
 <h2>Apply to Job: <?= isset($job['job_title']) ? htmlspecialchars($job['job_title']) : 'Unknown Job' ?></h2>
 

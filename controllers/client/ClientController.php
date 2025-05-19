@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../../models/User.php';
 require_once __DIR__ . '/../../models/ClientProfile.php';
 require_once __DIR__ . '/../../models/Job.php';
@@ -6,9 +7,11 @@ require_once __DIR__ . '/../../models/Service.php';
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../models/Notification.php';
 require_once __DIR__ . '/../../models/Application.php';
+require_once 'models/Milestone.php';
 
 
 class ClientController {
+    
 
     public function register() {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -335,7 +338,7 @@ class ClientController {
         }
     
         // Load the job details view
-        include 'views/client/job_details.php';
+        include 'views/client/job_tracking.php';
     }
     
 
@@ -374,43 +377,339 @@ class ClientController {
     }
     
 
-    public function sendMessage()
+
+
+public function checkAllMilestonesCompleted($jobId) {
+    $milestoneModel = new Milestone();
+    // Fetch all milestones for the given job
+    $milestones = $milestoneModel->getMilestonesByJobId($jobId);
+
+    // Check if all milestones are completed
+    foreach ($milestones as $milestone) {
+        if ($milestone['status'] != 'completed') {
+            return false; // Return false if any milestone is not completed
+        }
+    }
+    return true; // Return true if all milestones are completed
+}
+
+public function makeFullPayment() {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['job_id'])) {
+        $jobId = $_GET['job_id'];
+
+        // Ensure the client has marked all milestones as completed
+        if ($this->checkAllMilestonesCompleted($jobId)) {
+            // Proceed with the payment
+            $paymentResult = $this->processPayment($jobId);
+            if ($paymentResult) {
+                $_SESSION['success_message'] = 'Payment successful!';
+                header('Location: index.php?controller=client&action=viewJobTracking');
+                exit();
+            } else {
+                $_SESSION['error_message'] = 'Payment failed. Please try again.';
+                header('Location: index.php?controller=client&action=viewJobTracking');
+                exit();
+            }
+        } else {
+            $_SESSION['error_message'] = 'You must mark all milestones as completed before making the payment.';
+            header('Location: index.php?controller=client&action=viewJobTracking');
+            exit();
+        }
+    }
+}
+
+ public function uploadReceipt() {
+    $jobId = $_GET['job_id'] ?? null;
+
+    if (!$jobId) {
+        $_SESSION['error'] = "Invalid job ID.";
+        header("Location: index.php?controller=jobtracking&action=jobTracking&job_id=" . $jobId);
+        exit;
+    }
+
+    require_once 'models/Job.php';
+    $job = Job::getJobById($jobId);
+
+    if (!$job) {
+        $_SESSION['error'] = "Job not found.";
+        header("Location: index.php?controller=jobtracking&action=jobTracking&job_id=" . $jobId);
+        exit;
+    }
+
+    require 'views/client/upload_receipt.php';
+}
+
+
+    // Method to handle the receipt submission
+  public function submitReceipt() {
+    session_start(); // Start session to access session variables
+
+    $jobId = $_POST['job_id'] ?? null;
+    $clientId = $_SESSION['user_id'] ?? null;
+
+    // Validate session and job ID
+    if (!$clientId || !$jobId) {
+        $_SESSION['error_message'] = "Invalid session or job ID.";
+        header("Location: index.php?controller=jobtracking&action=jobTracking&job_id=$jobId");
+        exit;
+    }
+
+    // Validate receipt upload
+    if (!isset($_FILES['receipt']) || $_FILES['receipt']['error'] !== 0) {
+        $_SESSION['error_message'] = "Please upload a valid receipt.";
+        header("Location: index.php?controller=client&action=uploadReceipt&job_id=$jobId");
+        exit;
+    }
+
+    // Handle uploaded file
+    $receiptFile = $_FILES['receipt'];
+    $filename = uniqid() . '_' . basename($receiptFile['name']);
+    $targetDir = 'public/uploads/receipts/';
+    $targetPath = $targetDir . $filename;
+
+    // Optional: Validate file type and size
+    $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+    $maxSize = 2 * 1024 * 1024; // 2MB
+
+    if (!in_array($receiptFile['type'], $allowedTypes)) {
+        $_SESSION['error_message'] = "Invalid file type. Only JPG, PNG, or PDF files are allowed.";
+        header("Location: index.php?controller=client&action=uploadReceipt&job_id=$jobId");
+        exit;
+    }
+
+    if ($receiptFile['size'] > $maxSize) {
+        $_SESSION['error_message'] = "File size exceeds the 2MB limit.";
+        header("Location: index.php?controller=client&action=uploadReceipt&job_id=$jobId");
+        exit;
+    }
+
+    // Create receipts directory if it doesn't exist
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0777, true);
+    }
+
+    if (move_uploaded_file($receiptFile['tmp_name'], $targetPath)) {
+        // Save receipt and update job
+        require_once 'models/Payment.php';
+        require_once 'models/Job.php';
+
+        // Save in payments table (optional, if you use it)
+        Payment::create($jobId, $clientId, $filename);
+
+        // FIXED: Pass filename to update the receipt column
+        Job::markAsPaid($jobId, $filename);
+
+        // Notify freelancer
+        $freelancerId = Job::getAcceptedFreelancerId($jobId);
+        if ($freelancerId) {
+            $notificationMessage = "The client has uploaded a payment receipt for the job. Please review it and confirm.";
+            $notificationType = 'freelancer';
+            $notificationLink = "index.php?controller=freelancer&action=checkPayment&job_id=$jobId";
+            $isRead = 0;
+
+            $db = Database::getConnection();
+            $notifStmt = $db->prepare("INSERT INTO notifications (user_id, type, message, link, is_read, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
+            $notifStmt->bind_param("isssi", $freelancerId, $notificationType, $notificationMessage, $notificationLink, $isRead);
+            $notifStmt->execute();
+            $notifStmt->close();
+        }
+
+        $_SESSION['success_message'] = "Receipt uploaded successfully. Freelancer has been notified.";
+        header("Location: index.php?controller=jobtracking&action=jobTracking&job_id=$jobId");
+        exit;
+    } else {
+        $_SESSION['error_message'] = "Failed to upload receipt.";
+        header("Location: index.php?controller=client&action=uploadReceipt&job_id=$jobId");
+        exit;
+    }
+}
+
+
+
+
+
+// ClientController - Review and approve job
+public function reviewJob()
 {
     session_start();
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: index.php?controller=auth&action=login");
-        exit();
+
+    if (!isset($_GET['job_id']) || !is_numeric($_GET['job_id'])) {
+        header("Location: index.php?controller=client&action=myJobs&error=invalid_job");
+        exit;
     }
 
-    // Get data from the form
-    if (!isset($_POST['message']) || empty($_POST['message']) || !isset($_POST['job_id'])) {
-        header("Location: index.php?controller=client&action=viewJob&job_id=" . $_POST['job_id'] . "&error=message_empty");
-        exit();
-    }
-
-    $message = $_POST['message'];
-    $jobId = $_POST['job_id'];
-    $userId = $_SESSION['user_id']; // Assuming the session stores the logged-in client's ID
+    $jobId = (int) $_GET['job_id'];
 
     $db = Database::getConnection();
+    $stmt = $db->prepare("SELECT * FROM jobs WHERE id = ?");
+    $stmt->bind_param("i", $jobId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $job = $result->fetch_assoc();
 
-    // Store the message in the database (you may create a separate table for messages)
-    $stmt = $db->prepare("INSERT INTO messages (job_id, user_id, message, created_at) VALUES (?, ?, ?, NOW())");
-    if ($stmt) {
-        $stmt->bind_param("iis", $jobId, $userId, $message);
-        $stmt->execute();
-        $stmt->close();
-        header("Location: index.php?controller=client&action=viewJob&job_id=$jobId&success=message_sent");
-        exit();
+    if (!$job) {
+        header("Location: index.php?controller=client&action=myJobs&error=not_found");
+        exit;
+    }
+
+    if ($job['status'] === 'pending_review') {
+        require_once 'views/client/review_job.php';
     } else {
-        error_log("Failed to send message: " . $db->error);
-        header("Location: index.php?controller=client&action=viewJob&job_id=$jobId&error=db_error");
+        header("Location: index.php?controller=client&action=myJobs");
+        exit;
+    }
+}
+
+
+
+
+// ClientController - Approve job and mark it as completed
+public function approveJob()
+{
+    session_start();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $jobId = $_POST['job_id'] ?? null;
+        $comments = trim($_POST['approval_comments'] ?? '');
+        $action = $_POST['action'] ?? null;
+
+        if (!$jobId || !$action) {
+            $_SESSION['error_message'] = 'Missing job information or action.';
+            header("Location: index.php?controller=jobtracking&action=jobTracking&job_id=" . $jobId);
+            exit;
+        }
+
+        try {
+            $db = Database::getConnection();
+            if (!$db) {
+                throw new Exception("Database connection failed.");
+            }
+
+            // Get freelancer_id, job title, and final attachment file
+            $jobStmt = $db->prepare("
+                SELECT ja.freelancer_id, j.job_title, j.final_attachment 
+                FROM job_applications ja 
+                JOIN jobs j ON ja.job_id = j.id 
+                WHERE ja.job_id = ? AND j.status = 'pending_review'
+            ");
+            if (!$jobStmt) {
+                throw new Exception("Job SELECT prepare failed: " . $db->error);
+            }
+
+            $jobStmt->bind_param("i", $jobId);
+            $jobStmt->execute();
+            $jobResult = $jobStmt->get_result();
+            $job = $jobResult->fetch_assoc();
+            $jobStmt->close();
+
+            if (!$job) {
+                throw new Exception("Job not found or freelancer not accepted.");
+            }
+
+            $freelancerId = $job['freelancer_id'];
+            $jobTitle = $job['job_title'];
+            $submissionFile = $job['final_attachment'] ?? null;
+
+            // Prepare status update query
+            if ($action === 'approve') {
+                $sql = "
+                    UPDATE jobs 
+                    SET status = 'approved', approval_comments = ?, approved_at = NOW() 
+                    WHERE id = ? AND status = 'pending_review'
+                ";
+            } elseif ($action === 'reject') {
+                $sql = "
+                    UPDATE jobs 
+                    SET status = 'in_progress', rejection_comments = ?, approved_at = NULL, is_submitted = 0, final_attachment = NULL 
+                    WHERE id = ? AND status = 'pending_review'
+                ";
+            } else {
+                $_SESSION['error_message'] = 'Invalid action.';
+                header("Location: index.php?controller=jobtracking&action=jobTracking&job_id=" . $jobId);
+                exit;
+            }
+
+            $stmt = $db->prepare($sql);
+            if (!$stmt) {
+                throw new Exception("Status UPDATE prepare failed: " . $db->error);
+            }
+
+            $stmt->bind_param("si", $comments, $jobId);
+            $success = $stmt->execute();
+            $stmt->close();
+
+            // Delete submission file if rejected
+            if ($success && $action === 'reject' && $submissionFile && file_exists("public/uploads/" . $submissionFile)) {
+                unlink("public/uploads/" . $submissionFile);
+            }
+
+            // Notify freelancer
+            if ($success) {
+                $notificationType = 'freelancer';
+                $notificationLink = "index.php?controller=freelancer&action=viewJob&job_id=" . $jobId;
+                $isRead = 0;
+
+                $notificationMessage = ($action === 'approve')
+                    ? "Congratulations! Your submission for the job '$jobTitle' has been approved by the client."
+                    : "Your submission for the job '$jobTitle' has been rejected. Feedback: \"$comments\".";
+
+                $notifStmt = $db->prepare("
+                    INSERT INTO notifications (user_id, type, message, link, is_read, created_at)
+                    VALUES (?, ?, ?, ?, ?, NOW())
+                ");
+                if (!$notifStmt) {
+                    throw new Exception("Notification INSERT prepare failed: " . $db->error);
+                }
+
+                $notifStmt->bind_param("isssi", $freelancerId, $notificationType, $notificationMessage, $notificationLink, $isRead);
+                $notifStmt->execute();
+                $notifStmt->close();
+            }
+
+            $_SESSION['success_message'] = ($action === 'approve') 
+                ? 'Job approved and freelancer notified.'
+                : 'Job rejected, freelancer notified, and submission removed.';
+
+        } catch (Exception $e) {
+            error_log("Exception: " . $e->getMessage());
+            $_SESSION['error_message'] = 'Database error: ' . $e->getMessage();
+        }
+
+        header("Location: index.php?controller=jobtracking&action=jobTracking&job_id=" . $jobId);
         exit();
     }
 }
 
-    
-    
+public function rateService() {
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: index.php?controller=auth&action=login");
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $serviceId = isset($_POST['service_id']) ? intval($_POST['service_id']) : 0;
+        $rating = isset($_POST['rating']) ? intval($_POST['rating']) : null;
+        $clientId = $_SESSION['user_id'];
+
+        if ($serviceId > 0 && $rating !== null && $rating >= 1 && $rating <= 5) {
+            $success = Service::saveRating($serviceId, $clientId, $rating);
+            if ($success) {
+                $_SESSION['flash_message'] = "Rating submitted successfully.";
+            } else {
+                $_SESSION['flash_message'] = "Failed to submit rating. Please try again.";
+            }
+        } else {
+            $_SESSION['flash_message'] = "Invalid rating submission.";
+        }
+
+        header("Location: index.php?controller=client&action=clientDashboard");
+        exit;
+    }
+}
+
+
+
 
     
 }

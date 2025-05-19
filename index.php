@@ -50,12 +50,16 @@ switch ($controller) {
         require_once 'views/home/homepage.php';
         exit();
 
-        case 'jobtracking':  // Correct CamelCase to match URL
-            $controllerFile = $controllerDir . 'client/JobTrackingController.php';
-            $className = 'JobTrackingController';
-            break;
-    
+    case 'milestone':  // Added Milestone Controller
+        $controllerFile = $controllerDir . 'freelancer/MilestoneController.php';
+        $className = 'MilestoneController';
+        break;
 
+    case 'jobtracking':  // Correct CamelCase to match URL
+        $controllerFile = $controllerDir . 'client/JobTrackingController.php';
+        $className = 'JobTrackingController';
+        break;
+    
     default:
         echo "❌ Unknown controller '$controller'.<br>";
         echo "<a href='" . BASE_URL . "/index.php'>Go to Home</a>";

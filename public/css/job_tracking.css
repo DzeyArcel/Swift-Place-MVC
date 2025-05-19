@@ -5,11 +5,7 @@ body {
     padding: 0;
     background-color: #f4f4f4;
 }
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f4f6f9;
-    color: #333;
-}
+
 
 /* Navbar */
 .navbar {
@@ -101,4 +97,153 @@ table, th, td {
 th, td {
     padding: 8px 12px;
     text-align: left;
+}
+
+
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .job {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 30px;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .milestone-form, .submit-job-section, .payment-section {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+
+        button, .btn-link {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            margin: 2px;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-link:hover, button:hover {
+            background-color: #0056b3;
+        }
+
+        .top-controls {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .top-controls form {
+            display: inline-block;
+        }
+
+        .toggle-btn {
+            background-color: #28a745;
+        }
+
+        .payment-button {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 6px 10px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.payment-button:hover {
+    background-color: #218838;
+}
+
+.completed-status {
+    color: green;
+    font-weight: bold;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+
+button.btn-approve {
+    background-color: #28a745;
+    color: white;
+    padding: 0.5em 1em;
+}
+
+button.btn-reject {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.5em 1em;
+}
+
+.btn-payment {
+    display: inline-block;
+    padding: 0.5em 1em;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+}
+
+form {
+    max-width: 500px;
+    margin-top: 20px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    resize: vertical;
+}
+
+.freelancer-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.freelancer-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: #f9f9f9;
+    max-width: 400px;
+}
+
+.freelancer-pic {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+}
+
+.freelancer-info {
+    font-size: 14px;
 }

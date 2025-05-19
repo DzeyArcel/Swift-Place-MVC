@@ -4,39 +4,43 @@ require_once __DIR__ . '/../config/db.php'; // Adjust path as needed
 class Service {
 
     
-    public static function getAllServices() {
-        $conn = Database::getConnection();
-    
-        // Join with freelancers table to get first_name and last_name
-        $query = "
-        SELECT services.*, 
-               freelancers.first_name, 
-               freelancers.last_name, 
-               freelancer_profile.profile_picture
+public static function getAllServices() {
+    $conn = Database::getConnection();
+
+    // Join with freelancers and ratings table to get required info and average rating
+    $query = "
+        SELECT 
+            services.*, 
+            freelancers.first_name, 
+            freelancers.last_name, 
+            freelancer_profile.profile_picture,
+            AVG(service_ratings.rating) AS rating
         FROM services
         JOIN freelancers ON services.freelancer_id = freelancers.id
         LEFT JOIN freelancer_profile ON freelancer_profile.freelancer_id = freelancers.id
+        LEFT JOIN service_ratings ON service_ratings.service_id = services.id
+        GROUP BY services.id
     ";
-    
-    
-        $stmt = $conn->prepare($query);
-    
-        if (!$stmt) {
-            die("Prepare failed: " . $conn->error);
-        }
-    
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        $services = [];
-        if ($result && $result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $services[] = $row;
-            }
-        }
-    
-        return $services;
+
+    $stmt = $conn->prepare($query);
+
+    if (!$stmt) {
+        die("Prepare failed: " . $conn->error);
     }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $services = [];
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $services[] = $row;
+        }
+    }
+
+    return $services;
+}
+
 
     public static function getServicesByFreelancer($freelancer_id)
     {
@@ -184,21 +188,59 @@ public static function formatTimeSincePosted($created_at) {
 }
 
 
-public static function rateService($serviceId, $clientId, $rating) {
-    $conn = Database::getConnection();
+public static function saveRating($serviceId, $clientId, $rating) {
+    $db = Database::getConnection();
 
-    // Prevent duplicate rating
-    $check = $conn->prepare("SELECT * FROM ratings WHERE service_id = ? AND client_id = ?");
-    $check->execute([$serviceId, $clientId]);
+    // Check if rating already exists (optional - update vs insert logic)
+    $stmt = $db->prepare("SELECT id FROM service_ratings WHERE service_id = ? AND client_id = ?");
+    if ($stmt) {
+        $stmt->bind_param("ii", $serviceId, $clientId);
+        $stmt->execute();
+        $stmt->store_result();
 
-    if ($check->rowCount() > 0) {
-        return false; // Already rated
+        if ($stmt->num_rows > 0) {
+            // Update existing rating
+            $stmt->close();
+            $stmt = $db->prepare("UPDATE service_ratings SET rating = ? WHERE service_id = ? AND client_id = ?");
+            if (!$stmt) {
+                die("Prepare failed (update): " . $db->error);
+            }
+            $stmt->bind_param("iii", $rating, $serviceId, $clientId);
+        } else {
+            // Insert new rating
+            $stmt->close();
+            $stmt = $db->prepare("INSERT INTO service_ratings (service_id, client_id, rating) VALUES (?, ?, ?)");
+            if (!$stmt) {
+                die("Prepare failed (insert): " . $db->error);
+            }
+            $stmt->bind_param("iii", $serviceId, $clientId, $rating);
+        }
+
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        die("Prepare failed (select): " . $db->error);
     }
-
-    // Insert new rating
-    $stmt = $conn->prepare("INSERT INTO ratings (service_id, client_id, rating, created_at) VALUES (?, ?, ?, NOW())");
-    return $stmt->execute([$serviceId, $clientId, $rating]);
 }
+
+
+public static function getAverageRating($serviceId) {
+    $db = Database::getConnection();
+
+    $query = "SELECT AVG(rating) as average FROM service_ratings WHERE service_id = ?";
+    $stmt = $db->prepare($query);
+    
+    // Bind the parameter
+    $stmt->bind_param("i", $serviceId); // "i" = integer
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    return $row['average'] ?? null;
+}
+
+
 
 
 }

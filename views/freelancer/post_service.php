@@ -11,6 +11,19 @@
     </style>
 </head>
 <body>
+
+<header class="topbar">
+    <div class="logo-container">
+        <img src="public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
+    </div>
+    <nav class="nav-links">
+        <ul>
+            <li><a href="javascript:history.back()">&#8617;</a></li>
+            <li><a href="index.php?controller=auth&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
     <div class="form-container">
         <h2>Post a New Service</h2>
         <form action="index.php?controller=service&action=submit" method="post" enctype="multipart/form-data">

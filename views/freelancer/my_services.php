@@ -8,20 +8,18 @@
     <link rel="stylesheet" href="/Swift-Place/public/css/freelancerservicepost.css"> <!-- Your custom styles -->
 </head>
 <body>
-    <header>
-        <div class="navbar">
-            <div class="logo-container">
-                <img src="/Swift-Place/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
-            </div>
-            <nav>
-            <a href="index.php?controller=freelancer&action=dashboard">Dashboard</a>
-            <a href="index.php?controller=freelancer&action=myServices">Your Posted Services</a>
-                <a href="../php/freelance_profile.php">Profile</a>
-                <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-
-            </nav>
-        </div>
-    </header>
+   <header class="topbar">
+    <div class="logo-container">
+        <img src="public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
+    </div>
+    <nav class="nav-links">
+        <ul>
+            <li><a href="javascript:history.back()">&#8617;</a></li>
+            <li><a href="index.php?controller=freelancer&action=profile"><i class="fas fa-edit"></i>Profile</a></li>
+            <li><a href="index.php?controller=auth&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+</header>
 
     <section class="my-services">
     <h2>My Posted Services</h2>

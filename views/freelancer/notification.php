@@ -13,10 +13,8 @@
                 <img src="/Swift-Place/public/photos/Logos-removebg-preview.png" alt="Logo" class="logo-img">
             </div>
             <nav>
-            <a href="index.php?controller=freelancer&action=dashboard">Dashboard</a>
-            <a href="index.php?controller=freelancer&action=myServices">Your Posted Services</a>
-                <a href="../php/freelance_profile.php">Profile</a>
-                <li><a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <a href="javascript:history.back()">&#8617;</a>
+            <a href="index.php?controller=client&action=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
 
             </nav>
             </nav>

@@ -42,10 +42,19 @@ class Application
 public function getApplicationsByClient($clientId)
 {
     $sql = "
-        SELECT ja.*, j.job_title AS job_title, f.first_name AS freelancer_name
+        SELECT 
+            ja.*, 
+            j.job_title AS job_title, 
+            f.first_name, 
+            f.last_name,
+            f.email,
+            f.category AS job_category,
+            fp.phone,
+            fp.profile_picture
         FROM job_applications ja
         JOIN jobs j ON ja.job_id = j.id
         JOIN freelancers f ON ja.freelancer_id = f.id
+        LEFT JOIN freelancer_profiles fp ON f.user_id = fp.user_id
         WHERE j.client_id = ?
     ";
 
@@ -144,32 +153,32 @@ public static function getJobIdByApplicationId($applicationId) {
 public function getAllAcceptedApplicationsByJobId($jobId) {
     $conn = $this->conn;
 
-    // Prepare the SQL query to get accepted applications along with freelancer details
     $stmt = $conn->prepare("
-        SELECT a.id AS application_id, f.first_name, f.last_name, f.email
+        SELECT 
+            a.id AS application_id,
+            f.first_name,
+            f.last_name,
+            f.email,
+            fp.phone,
+            fp.profile_picture
         FROM job_applications a
         JOIN freelancers f ON a.freelancer_id = f.id
+        LEFT JOIN freelancer_profile fp ON fp.freelancer_id = f.id
         WHERE a.job_id = ? AND a.status = 'accepted'
     ");
 
-    // Bind the job ID parameter
     $stmt->bind_param("i", $jobId);
-    
-    // Execute the query
     $stmt->execute();
 
-    // Get the result set
     $result = $stmt->get_result();
-
-    // Fetch all results as an associative array
     $applications = $result->fetch_all(MYSQLI_ASSOC);
-    
-    // Close the statement
+
     $stmt->close();
 
-    // Return the list of accepted applications
     return $applications;
 }
+
+
 
 
 public static function getById($id) {

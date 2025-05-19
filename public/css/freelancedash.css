@@ -1,637 +1,303 @@
-/* General Styles */
+/* General Reset and Font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f8f8;
-}
-
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    width: 100%;
-}
-
-/* Navbar */
-.logo-img {
-    width: 200px; /* Increased size */
-    height: auto; /* Maintain aspect ratio */
-    max-height: 65px; /* Prevents overflow */
-}
-
-
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background-color: #fff;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-}
-
-.navbar input {
-    width: 40%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.navbar nav a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    transition: color 0.3s;
-}
-
-.navbar nav a:hover {
-    color: #1dbf73;
-}
-
-/* Hero Section */
-.hero {
-    background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
-    color: white;
-    text-align: center;
-    padding: 50px 20px;
-}
-
-.hero h1 {
-    font-size: 32px;
-    margin-bottom: 10px;
-}
-
-.hero p {
-    font-size: 18px;
-}
-
-.hero button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: white;
-    color: #333;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-.hero button:hover {
-    background: #1dbf73;
-    color: white;
-}
-
-/* Earnings Section */
-.earnings {
-    background: white;
-    text-align: center;
-    padding: 30px;
-    margin: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.earnings h2 {
-    font-size: 24px;
-}
-
-.earnings p {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.earnings button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: #1dbf73;
-    color: white;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-.earnings button:hover {
-    background: #17a35e;
-}
-
-/* Footer */
-footer {
-    background: #111;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    font-size: 14px;
-}
-
-
-.job-listings {
-    background: white;
-    padding: 30px;
-    margin: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.job-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.card {
-    width: calc(33.33% - 20px);
-    background: #f8f8f8;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.card h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.card p {
-    font-size: 14px;
-    color: #555;
-}
-
-.budget {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-    color: #1dbf73;
-}
-
-
-
-/* Footer */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-footer {
-    background: #111;
-    color: white;
-    padding: 30px 20px;
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-}
-
-.footer-container {
-    max-width: 1100px;
-    margin: auto;
-}
-
-/* Footer Links */
-.footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.footer-links a {
-    color: #ddd;
-    text-decoration: none;
-    font-size: 1em;
-    transition: color 0.3s ease-in-out;
-}
-
-.footer-links a:hover {
-    color: #1DBF73; /* Fiverr Green */
-}
-
-/* Social Icons */
-.social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.social-icons a {
-    font-size: 1.5em;
-    color: white;
-    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-.social-icons a:hover {
-    transform: scale(1.2);
-    color: #1DBF73;
-}
-
-/* Copyright */
-footer p {
-    font-size: 0.9em;
-    color: #aaa;
-}
-
-.job-listings {
-    width: 100%;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
-/* Title of the section */
-.job-listings h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.8em;  /* Decreased size of the title */
-    color: #333;
-}
-
-/* Wrapper for the job cards with horizontal scrolling */
-.job-cards {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 15px;  /* Reduced gap between cards */
-    padding: 10px 0;
-    max-width: 100%; /* Ensure the job cards container doesn't overflow */
-    box-sizing: border-box; /* Make sure padding doesn't cause overflow */
-}
-
-/* Individual job post card styling */
-.job-post {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    width: 250px;  /* Reduced width of the job card */
-    padding: 15px;  /* Reduced padding */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;  /* Reduced gap between elements */
-}
-
-/* Hover effect on the job card */
-.job-post:hover {
-    transform: translateY(-10px);
-}
-
-/* Title styling */
-.job-post h3 {
-    font-size: 1.4em;  /* Decreased font size */
-    color: #333;
-    margin-bottom: 8px;
-}
-
-/* Description of the job */
-.job-post .desc {
-    font-size: 0.9em;  /* Decreased font size */
-    color: #666;
-    margin-bottom: 8px;
-}
-
-/* Styling for the job details (skills, budget, etc.) */
-.job-post p {
-    font-size: 0.9em;  /* Decreased font size */
-    color: #555;
-    margin: 4px 0;  /* Reduced margin between lines */
-}
-
-/* Button styling */
-.apply-btn {
-    background-color: #5a0551;
-    color: white;
-    padding: 8px 12px;  /* Reduced button size */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.apply-btn:hover {
-    background-color: #3f0637;
-}
-
-/* service  ni siya*/
-
-.service-listings {
-    padding: 40px 30px;
-    background: #f7f7f7;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-.service-listings h2 {
-    font-size: 26px;
-    font-weight: 600;
-    margin-bottom: 30px;
-    color: #333;
-    text-align: center;
-}
-
-.service-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    justify-items: center;
-}
-
-.service-card {
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    width: 100%;
-    max-width: 330px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-}
-
-.service-img-container {
-    width: 100%;
-    height: 220px;
-    position: relative;
-}
-
-.service-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px 8px 0 0;
-}
-
-.placeholder-img {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f0f0;
-    color: #aaa;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 8px 8px 0 0;
-}
-
-.profile-section {
-    display: flex;
-    align-items: center;
-    padding: 15px 20px;
-    background: #fafafa;
-}
-
-.profile-pic {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    margin-right: 12px;
-    overflow: hidden;
-    border: 2px solid #fff;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-}
-
-.profile-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.freelancer-name {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-}
-
-.service-info {
-    padding: 15px 20px;
-    background: #fff;
-}
-
-.service-info .title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin: 10px 0;
-}
-
-.service-info .desc {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 12px;
-    height: 60px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #6F4A8E, #221F3B);
+    color: #f1f5f9;
     line-height: 1.6;
 }
 
-.service-info .category, .service-info .skills, .service-info .expertise {
-    font-size: 13px;
-    color: #888;
-    font-style: italic;
-    margin: 5px 0;
-}
-
-.service-info .posted-time {
-    font-size: 12px;
-    color: #aaa;
-    margin-bottom: 10px;
-}
-
-.service-info .tags {
-    font-size: 12px;
-    color: #007BFF;
-    font-weight: 500;
-    text-transform: capitalize;
-    margin-top: 10px;
-}
-
-.service-info .tags:hover {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.service-info .price {
-    font-size: 15px;
-    font-weight: 700;
-    color: #f59e0b;
-    margin-top: 10px;
-}
-
-.service-info .rating {
-    font-size: 13px;
-    color: #f39c12;
-    margin-top: 8px;
-    font-weight: 600;
-}
-
-.service-info .rating::before {
-    content: '★ ';
-}
-
-@media (max-width: 768px) {
-    .service-cards {
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-
-    .service-card {
-        max-width: 100%;
-    }
-}
-
-/* Styling for the navbar links */
-.navbar nav {
+/* Navbar */
+.navbar {
     display: flex;
-    align-items: center; /* Align all nav items vertically */
+    justify-content: space-between;
+    align-items: center;
+    background-color: #221F3B;
+    padding: 1rem 2rem;
 }
 
-.navbar nav a {
-    margin: 0 15px; /* Adds space between each nav item */
-    text-decoration: none; /* Removes the underline */
-    color: #333; /* Change to your preferred color */
-    font-size: 16px;
+.logo-img {
+    height: 50px;
 }
 
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
 
-/* Styles for the notification icon and modal */
+.nav-links a {
+    color: #f1f5f9;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links .active {
+    color: #FFD700;
+}
+
+.logout {
+    background-color: #e63946;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+
 .notification-icon {
     position: relative;
-    display: inline-block;
 }
 
 .notification-count {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -8px;
+    right: -8px;
     background-color: red;
     color: white;
-    border-radius: 100%;
-    padding: 5px 5px;
-    font-size: 8px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 0.8rem;
 }
 
-/* The Modal */
+/* Notification Modal */
 .modal {
-    display: none; /* Hidden by default */
     position: fixed;
-    z-index: 1; /* Sit on top */
+    z-index: 10;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+    background-color: rgba(0,0,0,0.5);
 }
 
-/* Modal Content */
 .modal-content {
-    background-color: #fff;
-    margin: 15% auto;
+    background-color: #2A2A40;
+    margin: 10% auto;
     padding: 20px;
-    border-radius: 5px;
-    width: 40%;
-    max-height: 80%;
-    overflow-y: auto;
+    border-radius: 8px;
+    width: 50%;
 }
 
-/* Close Button */
 .close-btn {
-    color: #aaa;
     float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-    color: black;
-    text-decoration: none;
+    font-size: 1.5rem;
     cursor: pointer;
+    color: #fff;
 }
 
-/* Notification Item Styles */
+.notification-list {
+    list-style: none;
+    padding: 0;
+}
+
 .notification-item {
     padding: 10px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
+    border-bottom: 1px solid #444;
 }
 
 .notification-item.unread {
-    font-weight: bold;
-    background-color: #f5f5f5;
-}
-
-.notification-item a {
-    text-decoration: none;
-    color: #000;
+    background-color: #3A3A5A;
 }
 
 .timestamp {
-    color: #888;
-    font-size: 12px;
-    margin-left: 10px;
+    display: block;
+    font-size: 0.8rem;
+    color: #bbb;
 }
 
-
-.post-service-link {
-    display: inline-block; /* Make it behave like a button */
-    padding: 10px 20px;  /* Button-like padding */
-    background-color: #950693;  /* Green background */
-    color: white;  /* White text */
-    text-decoration: none;  /* Remove underline */
-    border-radius: 5px;  /* Rounded corners */
-    font-size: 1em;  /* Font size */
-    font-weight: bold;  /* Bold text */
-    text-align: center;  /* Center the text */
-    transition: background-color 0.3s ease, transform 0.3s ease;
+/* Hero Section */
+.hero {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: rgba(0,0,0,0.2);
 }
 
-/* Hover effect for the link */
-.post-service-link:hover {
-    background-color: #730867;  /* Darker green on hover */
-    transform: translateY(-3px);  /* Lift the link when hovered */
+.hero-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
 }
 
-/* Active effect for the link (when clicked) */
-.post-service-link:active {
-    transform: translateY(1px);  /* Button appears to be pressed */
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
 }
 
-.freelancer-profile {
+.post-job-link {
+    display: inline-block;
+    margin-top: 1rem;
+    background-color: #FFD700;
+    color: #000;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Recommendations / Services */
+.recommendations {
+    padding: 2rem;
+}
+
+.recommendations h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.service-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background-color: #2A2A40;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+.service-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 1rem;
+}
+
+.freelancer-info {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
 }
 
-.freelancer-pic {
+.profile-img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #ddd;
-    background-color: #f8f8f8;
+}
+
+/* Rating stars */
+.stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.stars input[type="radio"] {
+    display: none;
+}
+
+.stars label {
+    font-size: 1.2rem;
+    color: #FFD700;
+    cursor: pointer;
+}
+
+.stars label:hover,
+.stars input[type="radio"]:checked ~ label {
+    color: #FFA500;
+}
+
+.card-content button {
+    margin-top: 0.5rem;
+    background-color: #6F4A8E;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Job Section */
+.job-section {
+    padding: 2rem;
+}
+
+.job-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.job-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.job-card {
+    background-color: #2A2A40;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+.job-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.client-profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.desc {
+    margin-top: 0.5rem;
+}
+
+/* Footer */
+footer {
+    background-color: #221F3B;
+    padding: 2rem;
+    color: #ccc;
+    text-align: center;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.social-icons a {
+    margin: 0 0.5rem;
+    color: #ccc;
+    font-size: 1.5rem;
+}
+
+.social-icons a:hover {
+    color: #FFD700;
 }
